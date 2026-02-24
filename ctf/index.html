@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>AISEC CTF 2026</title>
+  <link rel="shortcut icon" href="images/CRISIS_LOGO/crisis.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+  <style>
+    :root {
+      --red:        #e8071a;
+      --red-dim:    #8b0000;
+      --red-glow:   rgba(232,7,26,.55);
+      --red-faint:  rgba(232,7,26,.08);
+      --red-border: rgba(232,7,26,.25);
+      --bg:         #000;
+      --surface:    rgba(8,2,2,.8);
+      --text:       #f0f0f0;
+      --muted:      rgba(220,185,185,.6);
+      --mono:       'Share Tech Mono', monospace;
+      --display:    'Orbitron', monospace;
+      --body:       'Rajdhani', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      background: #000;
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: var(--red-dim); }
+    ::selection { background: var(--red); color: #000; }
+
+    /* ── MATRIX CANVAS ── */
+    #matrix-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+      opacity: .2;
+    }
+
+    /* ── Vignette ── */
+    .vignette {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,.85) 100%);
+    }
+
+    /* ── Scanlines ── */
+    .scanlines {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,.07) 3px, rgba(0,0,0,.07) 4px);
+    }
+
+    #page { position: relative; z-index: 2; }
+
+    /* ═══ PRELOADER ═══ */
+    #preloader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #000;
+      display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: center;
+      padding: 2rem 3rem;
+      font-family: var(--mono); font-size: .82rem;
+    }
+    #preloader .boot-line {
+      opacity: 0; animation: fadeIn .05s forwards;
+      margin-bottom: .18rem; letter-spacing: 1px;
+    }
+    .boot-ok   { color: #00e640; }
+    .boot-err  { color: var(--red); }
+    .boot-warn { color: #ff9900; }
+    .boot-def  { color: #aaa; }
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes blink  { 50% { opacity: 0; } }
+
+    /* ═══ NAVBAR ═══ */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      padding: .85rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background .3s, border .3s;
+      border-bottom: 1px solid transparent;
+    }
+    #navbar.scrolled {
+      background: rgba(0,0,0,.94);
+      backdrop-filter: blur(12px);
+      border-color: var(--red-border);
+    }
+    .nav-brand {
+      font-family: var(--display); font-size: 1.25rem; font-weight: 900;
+      letter-spacing: 4px; text-decoration: none;
+    }
+    .nav-brand .r { color: var(--red); text-shadow: 0 0 20px var(--red-glow); }
+    .nav-brand .w { color: #fff; }
+    .nav-links { display: flex; gap: .05rem; }
+    .nav-links a {
+      font-family: var(--mono); font-size: .68rem;
+      color: rgba(240,240,240,.6); text-decoration: none;
+      padding: .4rem .8rem; border: 1px solid transparent;
+      letter-spacing: 1.5px; text-transform: uppercase; transition: all .2s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--red); border-color: var(--red-border); background: var(--red-faint);
+    }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 22px; height: 2px; background: var(--red); display: block; }
+    .mob-nav {
+      display: none; flex-direction: column;
+      position: fixed; top: 58px; left: 0; right: 0; z-index: 199;
+      background: rgba(0,0,0,.97); border-bottom: 1px solid var(--red-border);
+      padding: 1rem 2rem 1.5rem;
+    }
+    .mob-nav.open { display: flex; }
+    .mob-nav a {
+      font-family: var(--mono); font-size: .75rem; color: rgba(240,240,240,.6);
+      text-decoration: none; padding: .7rem 0;
+      border-bottom: 1px solid rgba(232,7,26,.1);
+      letter-spacing: 2px; text-transform: uppercase; transition: color .2s;
+    }
+    .mob-nav a:hover { color: var(--red); }
+
+    /* ═══ HERO ═══ */
+    #hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 5rem 2.5rem 4rem;
+    }
+    .hero-inner { max-width: 1100px; margin: 0 auto; width: 100%; }
+
+    .hero-tag {
+      font-family: var(--mono); font-size: .68rem; color: var(--red);
+      letter-spacing: 4px; text-transform: uppercase;
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: 1.75rem;
+      animation: slideUp .6s ease both;
+    }
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red); box-shadow: 0 0 10px var(--red);
+      animation: livePulse 1.5s ease-in-out infinite;
+    }
+    @keyframes livePulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.7);opacity:.5} }
+
+    .hero-title {
+      font-family: var(--display);
+      font-size: clamp(3.5rem, 11vw, 9rem);
+      font-weight: 900; line-height: .9; letter-spacing: -3px;
+      margin-bottom: 1.5rem;
+      animation: slideUp .65s ease .08s both;
+    }
+    .ht-red { color: var(--red); text-shadow: 0 0 40px var(--red-glow), 0 0 100px rgba(232,7,26,.25); }
+    .ht-white { color: #fff; }
+
+    /* Glitch */
+    .glitch { position: relative; display: inline-block; }
+    .glitch::before, .glitch::after {
+      content: attr(data-g);
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    }
+    .glitch::before {
+      color: #ff0000; animation: g1 5s linear infinite;
+      clip-path: polygon(0 20%, 100% 20%, 100% 25%, 0 25%);
+      transform: translate(-3px);
+    }
+    .glitch::after {
+      color: rgba(0,255,255,.35); animation: g2 5.5s linear infinite;
+      clip-path: polygon(0 65%, 100% 65%, 100% 70%, 0 70%);
+      transform: translate(3px);
+    }
+    @keyframes g1 {
+      0%,87%,100%{clip-path:polygon(0 0,100% 0,100% 0,0 0)}
+      89%{clip-path:polygon(0 15%,100% 15%,100% 20%,0 20%);transform:translate(-4px)}
+      92%{clip-path:polygon(0 55%,100% 55%,100% 60%,0 60%);transform:translate(3px)}
+      95%{clip-path:polygon(0 80%,100% 80%,100% 85%,0 85%);transform:translate(-2px)}
+    }
+    @keyframes g2 {
+      0%,85%,100%{clip-path:polygon(0 0,100% 0,100% 0,0 0)}
+      87%{clip-path:polygon(0 60%,100% 60%,100% 65%,0 65%);transform:translate(4px)}
+      91%{clip-path:polygon(0 10%,100% 10%,100% 15%,0 15%);transform:translate(-3px)}
+      94%{clip-path:polygon(0 40%,100% 40%,100% 45%,0 45%);transform:translate(2px)}
+    }
+
+    .hero-sub {
+      font-family: var(--mono); font-size: .75rem; color: var(--muted);
+      letter-spacing: 2.5px; display: flex; gap: 1.5rem; flex-wrap: wrap;
+      margin-bottom: 1.75rem;
+      animation: slideUp .65s ease .15s both;
+    }
+    .hero-sub span::before { content: '//'; color: var(--red); opacity: .4; margin-right: .4rem; }
+
+    .hero-desc {
+      font-size: 1.05rem; color: var(--muted); max-width: 500px;
+      line-height: 1.85; margin-bottom: 2.5rem; font-weight: 300;
+      animation: slideUp .65s ease .22s both;
+    }
+    .hero-desc strong { color: var(--red); font-weight: 600; }
+
+    .hero-btns {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      animation: slideUp .65s ease .3s both;
+    }
+
+    @keyframes slideUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+
+    /* Scroll cue */
+    .scroll-cue {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      font-family: var(--mono); font-size: .6rem; color: rgba(232,7,26,.5);
+      letter-spacing: 3px; text-transform: uppercase;
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      animation: slideUp 1s ease 1.5s both;
+    }
+    .scroll-cue i { animation: bounce 1.5s ease-in-out infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
+
+    /* ═══ BUTTONS ═══ */
+    .btn-red {
+      font-family: var(--mono); font-size: .75rem; font-weight: bold;
+      letter-spacing: 3px; text-transform: uppercase;
+      padding: .85rem 2rem; text-decoration: none;
+      display: inline-flex; align-items: center; gap: .7rem;
+      border: 1px solid var(--red); color: var(--red); background: var(--red-faint);
+      position: relative; overflow: hidden; cursor: pointer;
+      transition: color .3s;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    }
+    .btn-red::after {
+      content: ''; position: absolute; inset: 0;
+      background: var(--red); transform: translateX(-105%);
+      transition: transform .3s ease; z-index: 0;
+    }
+    .btn-red:hover::after { transform: translateX(0); }
+    .btn-red:hover { color: #000; }
+    .btn-red > * { position: relative; z-index: 1; }
+
+    .btn-ghost {
+      font-family: var(--mono); font-size: .75rem;
+      letter-spacing: 3px; text-transform: uppercase;
+      padding: .85rem 2rem; text-decoration: none;
+      display: inline-flex; align-items: center; gap: .7rem;
+      border: 1px solid rgba(240,240,240,.2); color: rgba(240,240,240,.65);
+      background: transparent; cursor: pointer; transition: all .25s;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    }
+    .btn-ghost:hover { border-color: var(--red-border); color: var(--red); background: var(--red-faint); }
+
+    /* ═══ SECTIONS ═══ */
+    .ctf-section { padding: 5rem 2.5rem; position: relative; z-index: 2; }
+    .ctf-section.dark-bg { background: rgba(5,0,0,.5); }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+
+    .sec-tag {
+      font-family: var(--mono); font-size: .65rem; color: var(--red);
+      letter-spacing: 3.5px; text-transform: uppercase;
+      margin-bottom: .5rem; display: flex; align-items: center; gap: .5rem;
+    }
+    .sec-tag::before { content: '>_'; opacity: .4; }
+    .sec-h {
+      font-family: var(--display); font-weight: 900;
+      font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -1px; line-height: 1;
+    }
+    .sec-h .r { color: var(--red); text-shadow: 0 0 18px var(--red-glow); }
+    .sec-h .w { color: #fff; }
+    .sec-rule { width: 48px; height: 2px; background: linear-gradient(90deg, var(--red), transparent); margin-top: .7rem; }
+
+    /* card */
+    .c-card {
+      background: var(--surface); border: 1px solid var(--red-border);
+      padding: 2rem; position: relative; overflow: hidden;
+      backdrop-filter: blur(8px); transition: border-color .3s, box-shadow .3s;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    }
+    .c-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 2px; height: 100%;
+      background: linear-gradient(180deg, var(--red), transparent);
+    }
+    .c-card:hover { border-color: rgba(232,7,26,.45); box-shadow: 0 0 30px rgba(232,7,26,.1); }
+    .c-card h3 {
+      font-family: var(--display); font-size: .85rem; font-weight: 700;
+      color: var(--red); letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: .8rem;
+    }
+    .c-card p { font-family: var(--body); font-size: .95rem; font-weight: 300; color: var(--muted); line-height: 1.85; }
+    .c-card a { color: var(--red); }
+
+    /* ═══ ABOUT ═══ */
+    .about-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 2.5rem; align-items: start; }
+
+    .stats-box {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--red-border); border: 1px solid var(--red-border);
+      margin-bottom: 1rem;
+    }
+    .s-cell { background: #000; padding: 1.25rem; text-align: center; }
+    .s-num {
+      font-family: var(--display); font-size: 2rem; font-weight: 900;
+      color: var(--red); line-height: 1;
+      text-shadow: 0 0 18px var(--red-glow);
+    }
+    .s-lbl { font-family: var(--mono); font-size: .58rem; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: .25rem; }
+
+    .cats { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem; }
+    .cat {
+      font-family: var(--mono); font-size: .62rem; letter-spacing: 1.5px; text-transform: uppercase;
+      padding: .28rem .7rem; border: 1px solid var(--red-border);
+      color: var(--red); background: var(--red-faint); transition: all .2s;
+    }
+    .cat:hover { background: var(--red); color: #000; }
+
+    /* ═══ GALLERY ═══ */
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px;
+    }
+    .g-item {
+      position: relative; overflow: hidden; aspect-ratio: 1; cursor: pointer;
+    }
+    .g-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(70%) brightness(.65); transition: all .4s;
+    }
+    .g-item:hover img { filter: grayscale(20%) brightness(.85); transform: scale(1.06); }
+    .g-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.75), transparent 50%);
+      display: flex; align-items: flex-end; padding: .6rem;
+      opacity: 0; transition: opacity .3s;
+    }
+    .g-item:hover .g-overlay { opacity: 1; }
+    .g-label { font-family: var(--mono); font-size: .58rem; color: var(--red); letter-spacing: 2px; }
+
+    /* Lightbox */
+    #lb {
+      display: none; position: fixed; inset: 0; z-index: 5000;
+      background: rgba(0,0,0,.93); backdrop-filter: blur(10px);
+      align-items: center; justify-content: center;
+    }
+    #lb.on { display: flex; }
+    #lb img { max-width: 88vw; max-height: 88vh; border: 1px solid var(--red-border); }
+    #lb-x {
+      position: absolute; top: 1.5rem; right: 2rem;
+      font-family: var(--mono); font-size: 1.8rem; color: var(--red);
+      cursor: pointer; background: none; border: none; line-height: 1;
+      transition: transform .2s;
+    }
+    #lb-x:hover { transform: rotate(90deg); }
+
+    /* ═══ TIMELINE ═══ */
+    .tl-wrap {
+      position: relative; padding: .5rem 0;
+    }
+    .tl-wrap::before {
+      content: ''; position: absolute;
+      left: 50%; transform: translateX(-50%);
+      top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(180deg, transparent, var(--red-dim) 15%, var(--red-dim) 85%, transparent);
+    }
+
+    .tl-row {
+      display: grid; grid-template-columns: 1fr 50px 1fr;
+      margin-bottom: 2rem; align-items: center;
+    }
+    .tl-row:last-child { margin-bottom: 0; }
+
+    .tl-box {
+      background: var(--surface); border: 1px solid var(--red-border);
+      padding: .9rem 1.1rem;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+      opacity: 0; transition: opacity .6s, transform .6s, border-color .3s;
+    }
+    .tl-row:nth-child(odd)  .tl-box { transform: translateX(-28px); }
+    .tl-row:nth-child(even) .tl-box { transform: translateX(28px); }
+    .tl-box.vis { opacity: 1; transform: translateX(0) !important; }
+    .tl-box:hover { border-color: rgba(232,7,26,.45); }
+
+    .tl-box time {
+      display: block; font-family: var(--mono); font-size: .65rem;
+      color: var(--red); letter-spacing: 2px; margin-bottom: .3rem; text-transform: uppercase;
+    }
+    .tl-box p { font-family: var(--body); font-size: .95rem; color: #e8e8e8; font-weight: 600; }
+
+    .tl-node {
+      display: flex; align-items: center; justify-content: center; z-index: 2;
+    }
+    .tl-dot {
+      width: 13px; height: 13px; border-radius: 50%;
+      border: 2px solid var(--red-dim); background: #000;
+      transition: all .5s;
+    }
+    .tl-box.vis ~ .tl-node .tl-dot,
+    .tl-row:has(.tl-box.vis) .tl-dot {
+      border-color: var(--red); background: var(--red);
+      box-shadow: 0 0 14px var(--red-glow);
+    }
+
+    /* odd: box left, even: box right */
+    .tl-row:nth-child(even) .tl-box  { grid-column: 3; grid-row: 1; }
+    .tl-row:nth-child(even) .tl-node { grid-column: 2; grid-row: 1; }
+    .tl-row:nth-child(even) .tl-spc  { grid-column: 1; grid-row: 1; }
+
+    /* ═══ PARTNERS ═══ */
+    .partners-row {
+      display: flex; justify-content: center; align-items: center;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .p-card {
+      background: var(--surface); border: 1px solid var(--red-border);
+      padding: 1.5rem 2.25rem;
+      display: flex; align-items: center; justify-content: center;
+      min-width: 180px; min-height: 110px;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+      transition: all .3s;
+    }
+    .p-card:hover { border-color: rgba(232,7,26,.5); box-shadow: 0 0 28px rgba(232,7,26,.1); }
+    .p-card img {
+      max-width: 150px; max-height: 65px; object-fit: contain;
+      filter: grayscale(80%) brightness(1.3); transition: filter .3s;
+    }
+    .p-card:hover img { filter: grayscale(0) brightness(1.1); }
+
+    /* ═══ FOOTER ═══ */
+    footer {
+      background: rgba(0,0,0,.95); border-top: 1px solid var(--red-border);
+      padding: 1.75rem 2rem; text-align: center;
+      position: relative; z-index: 2;
+    }
+    footer p { font-family: var(--mono); font-size: .62rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+    footer .r { color: var(--red); }
+
+    /* Back to top */
+    #btt {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 50;
+      width: 40px; height: 40px;
+      background: rgba(0,0,0,.85); border: 1px solid var(--red-border);
+      color: var(--red); font-size: .9rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; text-decoration: none;
+      opacity: 0; pointer-events: none; transition: all .3s;
+      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    }
+    #btt.on { opacity: 1; pointer-events: all; }
+    #btt:hover { background: var(--red); color: #000; }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media(max-width:1024px) { .about-grid { grid-template-columns: 1fr; } .gallery-grid { grid-template-columns: repeat(3,1fr); } }
+    @media(max-width:768px) {
+      .nav-links { display: none; } .hamburger { display: flex; }
+      .gallery-grid { grid-template-columns: repeat(2,1fr); }
+      .tl-wrap::before { left: 18px; transform: none; }
+      .tl-row { grid-template-columns: 36px 1fr !important; }
+      .tl-row:nth-child(even) .tl-box  { grid-column: 2 !important; }
+      .tl-row:nth-child(even) .tl-node { grid-column: 1 !important; }
+      .tl-row:nth-child(even) .tl-spc  { display: none; }
+      .tl-row:nth-child(odd)  .tl-box  { grid-column: 2 !important; transform: translateX(20px) !important; }
+      .tl-row:nth-child(odd)  .tl-node { grid-column: 1 !important; justify-content: flex-start; }
+      .tl-spc { display: none; }
+      .hero-title { letter-spacing: -2px; }
+    }
+    @media(max-width:480px) {
+      .hero-btns { flex-direction: column; }
+      .gallery-grid { grid-template-columns: repeat(2,1fr); }
+      .stats-box { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Matrix Rain Canvas -->
+<canvas id="matrix-canvas"></canvas>
+<div class="vignette"></div>
+<div class="scanlines"></div>
+
+<!-- Preloader -->
+<div id="preloader"><div id="bootlog"></div></div>
+
+<div id="page" style="opacity:0;transition:opacity .6s">
+
+  <!-- Navbar -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-brand"><span class="r">AISEC</span><span class="w">CTF</span></a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="#about">About</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#dates">Dates</a>
+      <a href="#partners">Partners</a>
+      <a href="instructions.html">Instructions</a>
+      <a href="https://discord.gg/swFVcu2Shx" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+    </div>
+    <div class="hamburger" id="ham"><span></span><span></span><span></span></div>
+  </nav>
+  <div class="mob-nav" id="mobnav">
+    <a href="index.html">Home</a>
+    <a href="#about">About</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#dates">Dates</a>
+    <a href="#partners">Partners</a>
+    <a href="instructions.html">Instructions</a>
+    <a href="https://discord.gg/swFVcu2Shx" target="_blank">Discord</a>
+  </div>
+
+  <!-- ══ HERO ══ -->
+  <section id="hero" style="position:relative">
+    <div class="hero-inner">
+      <div class="hero-tag">
+        <div class="live-dot"></div>
+        <span>CTF Live &mdash; Registration Open</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="ht-red glitch" data-g="AISEC">AISEC</span><br>
+        <span class="ht-white">CTF</span> <span class="ht-red">2026</span>
+      </h1>
+
+      <div class="hero-sub">
+        <span>ENSA Marrakech</span>
+        <span>12 &ndash; 14 May 2026</span>
+        <span>Jeopardy Style</span>
+        <span>12h Non-Stop</span>
+      </div>
+
+      <p class="hero-desc">
+        The quieter you become, the more you are able to hear.<br>
+        Test your skills in <strong>web exploitation, cryptography, reverse engineering</strong>,
+        forensics, binary exploitation and more. Find the flags. Win glory.
+      </p>
+
+      <div class="hero-btns">
+        <a href="#about" class="btn-red">
+          <span>JOIN US</span><i class="fas fa-terminal"></i>
+        </a>
+        <a href="instructions.html" class="btn-ghost">
+          <span>Read Docs</span>
+        </a>
+      </div>
+    </div>
+    <div class="scroll-cue">
+      <span>scroll</span>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+  </section>
+
+  <!-- ══ ABOUT ══ -->
+  <section id="about" class="ctf-section dark-bg">
+    <div class="section-inner">
+      <div style="margin-bottom:3rem">
+        <div class="sec-tag">ls about/</div>
+        <h2 class="sec-h"><span class="r">ABOUT</span> <span class="w">US</span></h2>
+        <div class="sec-rule"></div>
+      </div>
+
+      <div class="about-grid">
+        <!-- Left -->
+        <div class="c-card">
+          <h3>What is Capture the Flag?</h3>
+          <p>A Capture The Flag (CTF) competition is a cybersecurity challenge that tests participants' hacking skills. The goal is to find hidden flags within a set time frame. Flags are usually hidden in vulnerable systems, applications, or networks. Participants must exploit vulnerabilities and extract the flags.</p>
+          <br>
+          <h3>About AISEC CTF</h3>
+          <p>This event is a cybersecurity competition organized by <strong style="color:var(--red)">CLUB GCDSTE</strong> at ENSA Marrakech as part of <a href="https://aisec.uca.ma/" target="_blank">the AISEC event</a> — the International Summit on Artificial Intelligence &amp; Cybersecurity.</p>
+          <div style="margin-top:2rem;text-align:center">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdDm52Tbo970EnX1Yd_Ycps88i6DngKjqlyPtYbITnZEHmeBw/viewform" target="_blank" class="btn-red">
+              <span>Register Now</span><i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right -->
+        <div>
+          <div class="stats-box">
+            <div class="s-cell"><div class="s-num">12h</div><div class="s-lbl">Duration</div></div>
+            <div class="s-cell"><div class="s-num">7</div><div class="s-lbl">Categories</div></div>
+            <div class="s-cell"><div class="s-num">3&ndash;5</div><div class="s-lbl">Team Size</div></div>
+            <div class="s-cell"><div class="s-num">∞</div><div class="s-lbl">Glory</div></div>
+          </div>
+
+          <div class="c-card">
+            <h3>Challenge Categories</h3>
+            <div class="cats">
+              <span class="cat">Web Exploitation</span>
+              <span class="cat">Cryptography</span>
+              <span class="cat">Reverse Engineering</span>
+              <span class="cat">Forensics</span>
+              <span class="cat">Binary Exploitation</span>
+              <span class="cat">Miscellaneous</span>
+              <span class="cat">OSINT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ GALLERY ══ -->
+  <section id="gallery" class="ctf-section">
+    <div class="section-inner">
+      <div style="margin-bottom:3rem">
+        <div class="sec-tag">cat gallery.log</div>
+        <h2 class="sec-h"><span class="r">EVENT</span> <span class="w">GALLERY</span></h2>
+        <div class="sec-rule"></div>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="g-item"><img src="images/ctf1.webp" alt=""><div class="g-overlay"></div></div>
+        <div class="g-item"><img src="images/ctf2.webp" alt=""><div class="g-overlay"></div></div>
+        <div class="g-item"><img src="images/ctf3.webp" alt=""><div class="g-overlay"></div></div>
+        <div class="g-item"><img src="images/ctf4.webp" alt=""><div class="g-overlay"></div></div>
+        <div class="g-item"><img src="images/pic1.JPEG" alt=""><div class="g-overlay"></div></div>
+        <div class="g-item"><img src="images/pic2.JPEG" alt=""><div class="g-overlay"></div></div>
+        <div class="g-item"><img src="images/pic3.JPEG" alt=""><div class="g-overlay"></div></div>
+        <div class="g-item"><img src="images/comp1.JPEG" alt=""><div class="g-overlay"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div id="lb-modal">
+    <button id="lb-x" onclick="closeLb()">✕</button>
+    <img id="lb-img" src="" alt="">
+  </div>
+
+  <!-- ══ IMPORTANT DATES ══ -->
+  <section id="dates" class="ctf-section dark-bg">
+    <div class="section-inner">
+      <div style="margin-bottom:3rem;text-align:center">
+        <div class="sec-tag" style="justify-content:center">grep dates schedule.conf</div>
+        <h2 class="sec-h" style="text-align:center"><span class="r">IMPORTANT</span> <span class="w">DATES</span></h2>
+        <div class="sec-rule" style="margin:.7rem auto 0"></div>
+      </div>
+
+      <div class="tl-wrap">
+        <!-- Odd rows: box on LEFT -->
+        <div class="tl-row">
+          <div class="tl-box"><time>March 16, 2026</time><p>Registration Opens</p></div>
+          <div class="tl-node"><div class="tl-dot"></div></div>
+          <div class="tl-spc"></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-spc"></div>
+          <div class="tl-node"><div class="tl-dot"></div></div>
+          <div class="tl-box"><time>April 5, 2026</time><p>End of Registration</p></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-box"><time>April 15, 2026</time><p>Qualification Phase Begins</p></div>
+          <div class="tl-node"><div class="tl-dot"></div></div>
+          <div class="tl-spc"></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-spc"></div>
+          <div class="tl-node"><div class="tl-dot"></div></div>
+          <div class="tl-box"><time>May 13, 2026</time><p>Final Phase &mdash; Onsite, ENSA Marrakech</p></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-box"><time>May 14, 2026</time><p>Winners Announcement &amp; Awards Ceremony</p></div>
+          <div class="tl-node"><div class="tl-dot"></div></div>
+          <div class="tl-spc"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PARTNERS ══ -->
+  <section id="partners" class="ctf-section">
+    <div class="section-inner">
+      <div style="margin-bottom:3rem;text-align:center">
+        <div class="sec-tag" style="justify-content:center">cat /etc/partners.d/*</div>
+        <h2 class="sec-h" style="text-align:center"><span class="r">OFFICIAL</span> <span class="w">PARTNERS</span></h2>
+        <div class="sec-rule" style="margin:.7rem auto 0"></div>
+      </div>
+
+      <div class="partners-row">
+        <div class="p-card"><img src="images/CRISIS_LOGO/crisis_logo.png" alt="CRISIS"></div>
+        <div class="p-card"><img src="images/gcdste.png" alt="GCDSTE"></div>
+        <div class="p-card"><img src="images/shellboxes.png" alt="ShellBoxes"></div>
+        <div class="p-card"><img src="images/logoENSA.png" alt="ENSA Marrakech"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 &nbsp;<span class="r">AISEC CTF</span>&nbsp; &mdash; Club GCDSTE &mdash; ENSA Marrakech &mdash; Cadi Ayyad University</p>
+  </footer>
+
+</div><!-- #page -->
+
+<a id="btt" href="#"><i class="fas fa-chevron-up"></i></a>
+
+<!-- Lightbox markup (outside page for z-index) -->
+<div id="lb-modal" style="display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.93);backdrop-filter:blur(10px);align-items:center;justify-content:center;">
+  <button id="lb-x" style="position:absolute;top:1.5rem;right:2rem;font-family:'Share Tech Mono',monospace;font-size:2rem;color:#e8071a;cursor:pointer;background:none;border:none;transition:transform .2s" onclick="closeLb()">✕</button>
+  <img id="lb-img" src="" alt="" style="max-width:88vw;max-height:88vh;border:1px solid rgba(232,7,26,.25)">
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   MATRIX RAIN — RED BINARY
+════════════════════════════════════════════ */
+(function () {
+  const cvs = document.getElementById('matrix-canvas');
+  const ctx = cvs.getContext('2d');
+  let W, H, cols, drops;
+  const SZ = 13;
+  const CHARS = '01';
+
+  function init() {
+    W = cvs.width  = window.innerWidth;
+    H = cvs.height = window.innerHeight;
+    cols = Math.floor(W / SZ) + 1;
+    drops = Array.from({length: cols}, () => -(Math.random() * H / SZ));
+  }
+
+  function tick() {
+    // Fade trail
+    ctx.fillStyle = 'rgba(0,0,0,0.055)';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.font = SZ + 'px "Share Tech Mono",monospace';
+
+    for (let i = 0; i < cols; i++) {
+      const y = drops[i] * SZ;
+      const r = Math.random();
+
+      if (r > 0.96) {
+        // Bright white-red lead
+        ctx.fillStyle = '#ff6666';
+        ctx.shadowColor = '#ff0000';
+        ctx.shadowBlur = 10;
+      } else if (r > 0.75) {
+        ctx.fillStyle = '#cc0000';
+        ctx.shadowColor = '#cc0000';
+        ctx.shadowBlur = 5;
+      } else if (r > 0.4) {
+        ctx.fillStyle = '#880000';
+        ctx.shadowBlur = 0;
+      } else {
+        ctx.fillStyle = '#440000';
+        ctx.shadowBlur = 0;
+      }
+
+      ctx.fillText(CHARS[Math.floor(Math.random() * 2)], i * SZ, y);
+      ctx.shadowBlur = 0;
+
+      if (y > H && Math.random() > 0.972) {
+        drops[i] = 0;
+      }
+      drops[i] += Math.random() * 0.6 + 0.3;
+    }
+  }
+
+  init();
+  window.addEventListener('resize', init);
+  setInterval(tick, 48);
+})();
+
+/* ════════════════════════════════════════════
+   BOOT PRELOADER
+════════════════════════════════════════════ */
+(function () {
+  const log = document.getElementById('bootlog');
+  const LINES = [
+    [0,    'AISEC-CTF-2026  v3.0  — System Boot', 'boot-def'],
+    [180,  '[  OK  ] Initializing kernel interfaces', 'boot-ok'],
+    [360,  '[  OK  ] Loading cryptographic modules', 'boot-ok'],
+    [520,  '[ WARN ] Intrusion attempt detected — logging', 'boot-warn'],
+    [680,  '[  OK  ] Network stack online', 'boot-ok'],
+    [840,  '[ FAIL ] Root access blocked — intruder isolated', 'boot-err'],
+    [1000, '[  OK  ] Challenge engine: READY', 'boot-ok'],
+    [1160, '[  OK  ] Scoreboard: ONLINE', 'boot-ok'],
+    [1320, '[  OK  ] Flag server: ACTIVE', 'boot-ok'],
+    [1500, '> CTF environment deployed successfully', 'boot-def'],
+    [1700, '> Welcome, hacker. The flags await.', 'boot-err'],
+  ];
+
+  LINES.forEach(([ms, txt, cls]) => {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'boot-line ' + cls;
+      el.textContent = txt;
+      log.appendChild(el);
+      log.scrollTop = log.scrollHeight;
+    }, ms);
+  });
+
+  setTimeout(() => {
+    const pre = document.getElementById('preloader');
+    pre.style.transition = 'opacity .5s';
+    pre.style.opacity = '0';
+    setTimeout(() => {
+      pre.style.display = 'none';
+      document.getElementById('page').style.opacity = '1';
+    }, 500);
+  }, 2300);
+})();
+
+/* ════════════════════════════════════════════
+   NAVBAR
+════════════════════════════════════════════ */
+const nav = document.getElementById('navbar');
+const btt = document.getElementById('btt');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+  btt.classList.toggle('on', window.scrollY > 300);
+}, {passive: true});
+
+/* Hamburger */
+document.getElementById('ham').addEventListener('click', () => {
+  document.getElementById('mobnav').classList.toggle('open');
+});
+document.querySelectorAll('.mob-nav a').forEach(a =>
+  a.addEventListener('click', () => document.getElementById('mobnav').classList.remove('open'))
+);
+
+/* BTT */
+btt.addEventListener('click', e => { e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); });
+
+/* ════════════════════════════════════════════
+   TIMELINE INTERSECTION OBSERVER
+════════════════════════════════════════════ */
+const boxes = document.querySelectorAll('.tl-box');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('vis');
+    const dot = e.target.closest('.tl-row').querySelector('.tl-dot');
+    if (dot) {
+      dot.style.borderColor = '#e8071a';
+      dot.style.background  = '#e8071a';
+      dot.style.boxShadow   = '0 0 14px rgba(232,7,26,.6)';
+    }
+  });
+}, {threshold: 0.35});
+boxes.forEach(b => io.observe(b));
+
+
+</script>
+</body>
+</html>

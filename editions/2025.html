@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AISEC 2026 | 15 - 17 MAY 2026 | AI & CYBERSECURITY INTERNATIONAL SUMMIT |</title>
+  <link rel="icon" type="image/png" href="images/logos/aisec2026-w.png">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css" />
+
+  <style>
+    /* ─────────────────────────────────────────
+       PAGE-LEVEL OVERRIDES & NEW COMPONENTS
+       (inherits all CSS vars from style.css)
+    ───────────────────────────────────────── */
+
+    /* ── HERO ── */
+    .edition-hero{ position:relative; overflow:hidden; background:none !important; }
+    .edition-hero-bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0;}
+    .edition-hero-overlay{
+    position:absolute;
+    inset:0;
+    z-index:1;
+
+    /* AiSec cyber overlay: dark base + blue focus + bottom readability */
+    background:
+        linear-gradient(to bottom, rgba(8,18,36,.35) 0%, rgba(8,18,36,.75) 55%, rgba(8,18,36,.92) 100%),
+        radial-gradient(ellipse 70% 55% at 18% 38%, rgba(0,87,184,.35), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 30%, rgba(92,46,184,.18), transparent 65%);
+
+    /* optional: makes image a bit “cleaner” behind text */
+    backdrop-filter: saturate(115%) contrast(110%);
+    -webkit-backdrop-filter: saturate(115%) contrast(110%);
+    }
+    .edition-hero-inner{ position:relative; z-index:3; }
+
+    .edition-hero-grid {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background-image:
+        linear-gradient(rgba(0,87,184,0.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,87,184,0.2) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 70% at 60% 50%, black 20%, transparent 80%);
+    }
+    .edition-hero .scan-line { z-index: 3; }
+
+    .edition-year-stamp {
+      position: absolute;
+      right: -1rem;
+      top: 50%;
+      transform: translateY(-50%) rotate(90deg);
+      font-family: var(--font-display);
+      font-size: clamp(8rem, 20vw, 17rem);
+      font-weight: 800;
+      letter-spacing: 8px;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(232,241,252,.06);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    .edition-hero-content {
+      position: relative;
+      z-index: 4;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 160px 2rem 5rem;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .edition-eyebrow {
+      font-family: var(--font-mono);
+      font-size: .68rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #7ab8ff;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+    }
+    .edition-eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: #7ab8ff;
+      flex-shrink: 0;
+    }
+
+    .edition-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3.8rem, 7vw, 7rem);
+      font-weight: 800;
+      line-height: .92;
+      letter-spacing: -1px;
+      color: var(--text-on-dark);
+      margin-bottom: 1.5rem;
+    }
+    .edition-hero-title span { color: var(--cyan); }
+
+    .edition-hero-desc {
+      color: var(--muted-dark);
+      font-size: 1rem;
+      max-width: 52ch;
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+
+    .edition-hero-tags {
+      display: flex;
+      gap: .45rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .edition-hero-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Stats quad */
+    .edition-stats-quad {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border-dark);
+      border: 1px solid var(--border-dark);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .eq-box {
+      background: rgba(232,241,252,.04);
+      padding: 1.8rem 1.5rem;
+      position: relative;
+      transition: background .25s;
+    }
+    .eq-box:hover { background: rgba(232,241,252,.08); }
+    .eq-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .eq-box:hover::before { opacity: 1; }
+    .eq-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 800;
+      color: #7ab8ff;
+      line-height: 1;
+      display: block;
+    }
+    .eq-label {
+      font-family: var(--font-mono);
+      font-size: .62rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted-dark);
+      margin-top: .3rem;
+      display: block;
+    }
+
+    /* Hero scroll hint */
+    .edition-scroll-hint {
+      position: relative;
+      z-index: 4;
+      padding: 1.4rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      font-size: .62rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(232,241,252,.22);
+    }
+    .edition-scroll-hint::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border-dark), transparent);
+    }
+
+    /* ── SECTION SCAFFOLDING ── */
+    .ep-section { position: relative; }
+    .ep-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+    .ep-label {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: .8rem;
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+    }
+    .ep-label::after {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 1px;
+      background: currentColor;
+    }
+    .ep-label.on-dark { color: #7ab8ff; }
+    .ep-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .ep-title.on-dark { color: var(--text-on-dark); }
+    .ep-title span { color: var(--cyan); }
+    .ep-lead {
+      color: var(--muted);
+      max-width: 58ch;
+      line-height: 1.8;
+      font-size: .95rem;
+    }
+    .ep-lead.on-dark { color: var(--muted-dark); }
+    .ep-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+    .ep-divider.dark { border-color: var(--border-dark); }
+
+    /* Tags */
+    .tag {
+      font-family: var(--font-mono);
+      font-size: .62rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: .22rem .65rem;
+      border-radius: 3px;
+      border: 1px solid;
+      display: inline-block;
+    }
+    .tag-cyan   { color: var(--cyan);   border-color: rgba(0,87,184,.35);   background: rgba(0,87,184,.07); }
+    .tag-red    { color: var(--red);    border-color: rgba(192,0,31,.3);    background: rgba(192,0,31,.06); }
+    .tag-green  { color: var(--green);  border-color: rgba(0,122,69,.3);    background: rgba(0,122,69,.06); }
+    .tag-purple { color: var(--purple); border-color: rgba(92,46,184,.3);   background: rgba(92,46,184,.06); }
+    .tag-muted  { color: var(--muted);  border-color: var(--border); }
+
+    /* Dark section tag overrides */
+    .dark-section .tag-cyan   { color: #7ab8ff; border-color: rgba(122,184,255,.25); background: rgba(122,184,255,.07); }
+    .dark-section .tag-red    { color: #ff8080; border-color: rgba(255,128,128,.25); background: rgba(255,128,128,.06); }
+    .dark-section .tag-green  { color: #5bcf90; border-color: rgba(91,207,144,.25);  background: rgba(91,207,144,.06);  }
+    .dark-section .tag-purple { color: #b08cff; border-color: rgba(176,140,255,.25); background: rgba(176,140,255,.07); }
+    .dark-section .tag-muted  { color: var(--muted-dark); border-color: var(--border-dark); }
+
+    /* ── ABOUT ── */
+    .about-ep { background: var(--bg); }
+    .about-ep-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 5rem;
+      align-items: start;
+      margin-top: 3.5rem;
+    }
+    .about-ep-body {
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.85;
+    }
+    .about-ep-body p + p { margin-top: 1.1rem; }
+    .about-ep-body strong { color: var(--text); }
+
+    .about-ep-aside { display: flex; flex-direction: column; gap: 1.5rem; }
+    .ep-aside-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .ep-aside-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--cyan);
+    }
+    .ep-aside-card.purple::before { background: var(--purple); }
+    .ep-aside-card h4 {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+    .ep-aside-card.purple h4 { color: var(--purple); }
+    .ep-aside-card ul { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .ep-aside-card li { font-size: .87rem; color: var(--muted); display: flex; align-items: baseline; gap: .5rem; }
+    .ep-aside-card li::before { content: '›'; color: var(--cyan); font-size: 1rem; flex-shrink: 0; }
+    .ep-aside-card.purple li::before { color: var(--purple); }
+    .theme-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .4rem; }
+
+    /* ── TIMELINE ── */
+    .timeline-ep { background: var(--bg2); }
+    .tl-list {
+      position: relative;
+      margin-top: 3.5rem;
+    }
+    .tl-list::before {
+      content: '';
+      position: absolute;
+      left: 5rem;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--border-dark) 8%, var(--border-dark) 92%, transparent);
+    }
+    .tl-row {
+      display: grid;
+      grid-template-columns: 5rem auto;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+    .tl-row:last-child { margin-bottom: 0; }
+    .tl-when {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      letter-spacing: 1px;
+      color: var(--muted-dark);
+      padding-top: .25rem;
+      text-align: right;
+      padding-right: 1.4rem;
+      line-height: 1.5;
+    }
+    .tl-dot {
+      position: absolute;
+      left: calc(5rem - 5px);
+      top: .55rem;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--cyan);
+      border: 2px solid var(--bg2);
+      box-shadow: 0 0 0 4px rgba(0,87,184,.2);
+    }
+    .tl-content { padding-left: 1.4rem; }
+    .tl-event-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-on-dark);
+      margin-bottom: .3rem;
+    }
+    .tl-event-desc { font-size: .88rem; color: var(--muted-dark); line-height: 1.75; }
+    .tl-event-tags { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .55rem; }
+
+    /* ── SPEAKERS ── */
+    .speakers-ep { background: var(--bg); }
+    .speakers-ep-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+    .ep-speaker-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color .3s, transform .3s, box-shadow .3s;
+    }
+    .ep-speaker-card:hover {
+      border-color: rgba(0,87,184,.5);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,30,80,.1);
+    }
+    .ep-speaker-placeholder {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, var(--surface-dark), var(--surface-dark2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 800;
+      color: rgba(168,204,240,.2);
+    }
+    .ep-speaker-info { padding: 1rem 1.1rem 1.1rem; }
+    .ep-speaker-name {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: .2rem;
+    }
+    .ep-speaker-role {
+      font-family: var(--font-mono);
+      font-size: .62rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: .15rem;
+    }
+    .ep-speaker-org { font-size: .82rem; color: var(--muted); }
+    .ep-speaker-topic {
+      font-size: .82rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: .55rem;
+      padding-top: .55rem;
+      border-top: 1px solid var(--border);
+      line-height: 1.5;
+    }
+
+    /* ── CTF SECTION ── */
+    .ctf-ep {
+      background: var(--bg2);
+      overflow: hidden;
+      position: relative;
+    }
+    .ctf-ep::before {
+      content: 'CTF';
+      position: absolute;
+      right: -2rem; top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-display);
+      font-size: 28vw;
+      font-weight: 800;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(232,241,252,.04);
+      pointer-events: none;
+      line-height: 1;
+      z-index: 0;
+    }
+    .ctf-ep .ep-wrap { position: relative; z-index: 1; }
+    .ctf-ep-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+      margin-top: 3.5rem;
+    }
+    .ctf-ep-body { font-size: .95rem; color: var(--muted-dark); line-height: 1.85; }
+    .ctf-ep-body p + p { margin-top: 1rem; }
+    .ctf-ep-body strong { color: var(--text-on-dark); }
+
+    .ctf-podium-title {
+      font-family: var(--font-mono);
+      font-size: .62rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted-dark);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+    }
+    .ctf-podium-title::after { content: ''; flex: 1; height: 1px; background: var(--border-dark); }
+    .ctf-podium {
+      border: 1px solid var(--border-dark);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border-dark);
+    }
+    .podium-row {
+      background: var(--surface-dark);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      transition: background .2s;
+    }
+    .podium-row:hover { background: var(--surface-dark2); }
+    .podium-rank {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      font-weight: 800;
+      line-height: 1;
+      width: 2rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .podium-rank.gold   { color: #f5c842; }
+    .podium-rank.silver { color: #b8bcc8; }
+    .podium-rank.bronze { color: #c87e3a; }
+    .podium-team { flex: 1; }
+    .podium-name { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--text-on-dark); }
+    .podium-detail { font-family: var(--font-mono); font-size: .6rem; letter-spacing: 1px; color: var(--muted-dark); margin-top: .1rem; }
+    .podium-score { font-family: var(--font-mono); font-size: .8rem; color: #7ab8ff; flex-shrink: 0; }
+
+    /* ── GALLERY ── */
+    .gallery-ep { background: var(--bg2); }
+    .gallery-ep-masonry {
+      columns: 3;
+      column-gap: 1rem;
+      margin-top: 3rem;
+    }
+    .gal-ep-item {
+      break-inside: avoid;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border-dark);
+      position: relative;
+      cursor: zoom-in;
+    }
+    .gal-ep-item img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+      filter: grayscale(.45) contrast(1.07);
+      transition: filter .4s, transform .4s;
+    }
+    .gal-ep-item:hover img { filter: grayscale(0) contrast(1); transform: scale(1.04); }
+    .gal-ep-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(12,26,46,.72), transparent 50%);
+      pointer-events: none;
+    }
+
+
+    /* EP Speakers (same style logic as index cards) */
+    .speakers-ep-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:1.5rem;
+    }
+
+    .ep-speaker-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+    padding:0;
+    box-shadow:0 2px 12px rgba(0,30,80,.06);
+    transition:all .3s;
+    }
+    .ep-speaker-card:hover{
+    border-color:rgba(0,87,184,.35);
+    transform:translateY(-4px);
+    box-shadow:0 12px 40px rgba(0,30,80,.12);
+    }
+
+    /* image full */
+    .ep-speaker-media{
+    position:relative;
+    height:240px;
+    overflow:hidden;
+    }
+    .ep-speaker-media img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transform:scale(1.02);
+    transition:transform .35s ease;
+    }
+    .ep-speaker-card:hover .ep-speaker-media img{
+    transform:scale(1.08);
+    }
+
+    /* overlay deco */
+    .ep-speaker-overlay{
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(80% 60% at 80% 20%, rgba(0,87,184,.30), transparent 60%),
+        radial-gradient(60% 60% at 20% 90%, rgba(92,46,184,.20), transparent 55%),
+        linear-gradient(to top, rgba(12,26,46,.88) 0%, rgba(12,26,46,.20) 60%, rgba(12,26,46,0) 100%);
+    pointer-events:none;
+    }
+
+    /* info */
+    .ep-speaker-info{
+    padding:1.1rem 1.1rem 1.25rem;
+    }
+    .ep-speaker-name{
+    font-family:var(--font-display);
+    font-size:1.02rem;
+    font-weight:800;
+    color:var(--text);
+    margin-bottom:.25rem;
+    }
+    .ep-speaker-role{
+    font-family:var(--font-mono);
+    font-size:.68rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--cyan);
+    margin-bottom:.4rem;
+    }
+    .ep-speaker-org{
+    color:var(--muted);
+    font-size:.88rem;
+    margin-bottom:.5rem;
+    }
+    .ep-speaker-topic{
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    color:var(--muted);
+    line-height:1.6;
+    }
+
+    /* Lightbox */
+    .ep-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,16,32,.97);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+    .ep-lightbox.open { opacity: 1; pointer-events: all; }
+    .ep-lightbox img {
+      max-width: 88vw;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 6px;
+      border: 1px solid var(--border-dark);
+      box-shadow: 0 40px 120px rgba(0,0,0,.8);
+    }
+    .ep-lightbox-close {
+      position: absolute;
+      top: 1.5rem; right: 2rem;
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted-dark);
+      cursor: pointer;
+      background: none;
+      border: none;
+      transition: color .2s;
+    }
+    .ep-lightbox-close:hover { color: var(--text-on-dark); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .edition-hero-content { grid-template-columns: 1fr; padding-top: 140px; }
+      .edition-stats-quad { grid-template-columns: repeat(4,1fr); max-width: 500px; }
+      .about-ep-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .ctf-ep-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .gallery-ep-masonry { columns: 2; }
+      .tl-list::before { left: 3.5rem; }
+      .tl-row { grid-template-columns: 3.5rem auto; }
+      .tl-dot { left: calc(3.5rem - 5px); }
+      .speakers-ep-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 500px) {
+      .gallery-ep-masonry { columns: 1; }
+      .edition-stats-quad { grid-template-columns: 1fr 1fr; max-width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a class="nav-logo" href="../index.html#home">
+      <div class="logo-badge">AI</div>
+      <span>Ai<span class="accent">Sec</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#event">Program</a></li>
+      <li><a href="../index.html#team">Speakers</a></li>
+      <li><a href="../index.html#client">Sponsors</a></li>
+      <li><a href="../index.html#editions" class="active">Past Editions</a></li>
+      <li><a href="../conf/index.html">Scientific Conf</a></li>
+      <li><a href="../comp/index.html">CTF Competition</a></li>
+      
+    </ul>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="../index.html#home"     onclick="closeMenu()">Home</a>
+    <a href="../index.html#event"    onclick="closeMenu()">Program</a>
+    <a href="../index.html#team"     onclick="closeMenu()">Speakers</a>
+    <a href="../index.html#client"   onclick="closeMenu()">Sponsors</a>
+    <a href="../index.html#editions" onclick="closeMenu()">Past Editions</a>
+    <a href="../conf/index.html">Scientific Conference</a>
+    <a href="../comp/index.html">CTF Competition</a>
+    <a href="../index.html#home"     onclick="closeMenu()">Reserve Your Spot</a>
+  </div>
+
+  <!-- ─────────────── HERO ─────────────── -->
+  <header class="edition-hero dark-section">
+    <img class="edition-hero-bg" src="../images/editions/event-4.jpg" alt="AiSec 2025">
+    <div class="edition-hero-overlay"></div>
+    <div class="edition-hero-grid"></div>
+    <div class="scan-line"></div>
+    <div class="edition-year-stamp">2025</div>
+
+    <div class="edition-hero-content">
+      <div class="fade-in">
+        <div class="edition-eyebrow">Past Edition · ENSA Marrakech, Morocco</div>
+        <h1 class="edition-hero-title">AiSec<br><span>2025</span></h1>
+        <p class="edition-hero-desc">
+          The third edition expanded beyond its academic roots into a nationally recognised summit —
+          bringing 380+ researchers, practitioners, and students face-to-face with AI-driven threats,
+          a landmark CTF competition, and record-breaking research submissions.
+        </p>
+        <div class="edition-hero-tags">
+          <span class="tag tag-cyan">IoT Security</span>
+          <span class="tag tag-red">Ransomware</span>
+          <span class="tag tag-green">Threat Detection</span>
+          <span class="tag tag-purple">Adversarial ML</span>
+          <span class="tag tag-muted">CTF Finals</span>
+        </div>
+        <div class="edition-hero-btns">
+          <a class="btn-primary" href="../index.html#editions">← All Editions</a>
+          <a class="btn-outline" href="#" target="_blank">Download Report (PDF)</a>
+        </div>
+      </div>
+
+      <div class="fade-in">
+        <div class="edition-stats-quad">
+          <div class="eq-box">
+            <span class="eq-num">380+</span>
+            <span class="eq-label">Attendees</span>
+          </div>
+          <div class="eq-box">
+            <span class="eq-num">18</span>
+            <span class="eq-label">Speakers</span>
+          </div>
+          <div class="eq-box">
+            <span class="eq-num">20</span>
+            <span class="eq-label">CTF Teams</span>
+          </div>
+          <div class="eq-box">
+            <span class="eq-num">3</span>
+            <span class="eq-label">Days</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="edition-scroll-hint">Scroll to explore the edition</div>
+  </header>
+
+  <hr class="ep-divider">
+
+  <!-- ─────────────── ABOUT ─────────────── -->
+  <section class="ep-section about-ep">
+    <div class="ep-wrap">
+      <div class="ep-label fade-in">Overview</div>
+      <h2 class="ep-title fade-in">About <span>AiSec 2025</span></h2>
+      <p class="ep-lead fade-in">
+        A three-day programme spanning keynotes, workshops, peer-reviewed research sessions,
+        and a live on-site CTF competition at ENSA Marrakech.
+      </p>
+
+      <div class="about-ep-grid">
+        <div class="about-ep-body fade-in">
+          <p>
+            The 2025 edition marked a turning point for AiSec, expanding beyond its academic origins into a
+            <strong>nationally recognised conference</strong> with representation from industry leaders, government
+            cybersecurity bodies, and top research institutions across Morocco and the MENA region.
+          </p>
+          <p>
+            For the first time, the programme included a dedicated <strong>industry track</strong> where practitioners
+            presented real-world deployments of AI-driven security tooling — from anomaly detection in SOC environments
+            to automated incident-response pipelines.
+          </p>
+          <p>
+            The research track accepted 14 peer-reviewed papers, with best paper honours awarded in both the
+            Applied Security and Theoretical AI categories. All accepted papers were compiled into the
+            AiSec 2025 proceedings.
+          </p>
+        </div>
+
+        <div class="about-ep-aside">
+          <div class="ep-aside-card fade-in">
+            <h4>Programme Highlights</h4>
+            <ul>
+              <li>Scientific sessions with peer-reviewed talks</li>
+              <li>Hands-on security workshops</li>
+              <li>CTF: qualification + on-site finals</li>
+              <li>Industry demos & product showcases</li>
+              <li>Best Paper Award ceremony</li>
+            </ul>
+          </div>
+          <div class="ep-aside-card purple fade-in">
+            <h4>Main Themes</h4>
+            <div class="theme-chips">
+              <span class="tag tag-cyan">AI for SOC</span>
+              <span class="tag tag-green">Threat Detection</span>
+              <span class="tag tag-red">Ransomware</span>
+              <span class="tag tag-purple">Adversarial ML</span>
+              <span class="tag tag-cyan">IoT Security</span>
+              <span class="tag tag-muted">Zero Trust</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ep-divider dark">
+
+  <!-- ─────────────── TIMELINE ─────────────── -->
+  <section class="ep-section timeline-ep dark-section">
+    <div class="ep-wrap">
+      <div class="ep-label on-dark fade-in">Programme</div>
+      <h2 class="ep-title on-dark fade-in">3-Day <span>Schedule</span></h2>
+      <p class="ep-lead on-dark fade-in">Key moments across the three days of the summit.</p>
+
+      <div class="tl-list">
+
+        <div class="tl-row fade-in">
+          <div class="tl-when">Day 1<br>AM</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-event-title">Opening Ceremony & Keynote</div>
+            <div class="tl-event-desc">Welcome address by ENSA Marrakech leadership, followed by the opening keynote on the evolving threat landscape for AI-powered systems.</div>
+            <div class="tl-event-tags"><span class="tag tag-cyan">Keynote</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row fade-in">
+          <div class="tl-when">Day 1<br>PM</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-event-title">Research Paper Sessions</div>
+            <div class="tl-event-desc">Six peer-reviewed papers presented across two parallel tracks — Applied Security and Adversarial ML Theory.</div>
+            <div class="tl-event-tags"><span class="tag tag-green">Research</span><span class="tag tag-muted">Academic</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row fade-in">
+          <div class="tl-when">Day 2<br>AM</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-event-title">Workshops: Threat Detection & IoT</div>
+            <div class="tl-event-desc">Hands-on workshops covering intrusion detection with ML, IoT attack surfaces, and building defensive pipelines with open-source tooling.</div>
+            <div class="tl-event-tags"><span class="tag tag-purple">Workshop</span><span class="tag tag-cyan">IoT</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row fade-in">
+          <div class="tl-when">Day 2<br>PM</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-event-title">Industry Track + CTF Kickoff</div>
+            <div class="tl-event-desc">Industry practitioners take the stage; the CTF competition officially begins with 20 qualifying teams competing in isolation.</div>
+            <div class="tl-event-tags"><span class="tag tag-green">Industry</span><span class="tag tag-red">CTF</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row fade-in">
+          <div class="tl-when">Day 3<br>AM</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-event-title">CTF Finals — On Site</div>
+            <div class="tl-event-desc">Top teams compete live in the ENSA CTF arena solving challenges in web, crypto, forensics, binary analysis, and a novel Adversarial AI category.</div>
+            <div class="tl-event-tags"><span class="tag tag-red">CTF Finals</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row fade-in">
+          <div class="tl-when">Day 3<br>PM</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-event-title">Awards & Closing Keynote</div>
+            <div class="tl-event-desc">Best Paper Awards, CTF podium ceremony, and a closing keynote on the future of AI security research in Africa.</div>
+            <div class="tl-event-tags"><span class="tag tag-cyan">Awards</span><span class="tag tag-muted">Closing</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="ep-divider">
+
+  <!-- ─────────────── SPEAKERS ─────────────── -->
+  <section class="ep-section speakers-ep">
+    <div class="ep-wrap">
+      <div class="ep-label fade-in">Featured</div>
+      <h2 class="ep-title fade-in">2025 <span>Speakers</span></h2>
+      <p class="ep-lead fade-in">Researchers and practitioners who shaped the programme.</p>
+
+      <div class="speakers-ep-grid">
+
+        <div class="ep-speaker-card fade-in">
+        <div class="ep-speaker-media">
+            <img src="../images/speakers/Goat1.jpeg" alt="Speaker Name">
+            <div class="ep-speaker-overlay"></div>
+        </div>
+        <div class="ep-speaker-info">
+            <div class="ep-speaker-name">Speaker Name</div>
+            <div class="ep-speaker-role">Keynote</div>
+            <div class="ep-speaker-org">Institution / Company</div>
+            <div class="ep-speaker-topic">"AI-Driven Threat Intelligence at Scale"</div>
+        </div>
+        </div>
+
+        <div class="ep-speaker-card fade-in">
+        <div class="ep-speaker-media">
+            <img src="../images/speakers/Goat1.jpeg" alt="Speaker Name">
+            <div class="ep-speaker-overlay"></div>
+        </div>
+        <div class="ep-speaker-info">
+            <div class="ep-speaker-name">Speaker Name</div>
+            <div class="ep-speaker-role">Keynote</div>
+            <div class="ep-speaker-org">Institution / Company</div>
+            <div class="ep-speaker-topic">"AI-Driven Threat Intelligence at Scale"</div>
+        </div>
+        </div>
+
+        <div class="ep-speaker-card fade-in">
+        <div class="ep-speaker-media">
+            <img src="../images/speakers/Goat1.jpeg" alt="Speaker Name">
+            <div class="ep-speaker-overlay"></div>
+        </div>
+        <div class="ep-speaker-info">
+            <div class="ep-speaker-name">Speaker Name</div>
+            <div class="ep-speaker-role">Keynote</div>
+            <div class="ep-speaker-org">Institution / Company</div>
+            <div class="ep-speaker-topic">"AI-Driven Threat Intelligence at Scale"</div>
+        </div>
+        </div>
+
+        <div class="ep-speaker-card fade-in">
+        <div class="ep-speaker-media">
+            <img src="../images/speakers/Goat1.jpeg" alt="Speaker Name">
+            <div class="ep-speaker-overlay"></div>
+        </div>
+        <div class="ep-speaker-info">
+            <div class="ep-speaker-name">Speaker Name</div>
+            <div class="ep-speaker-role">Keynote</div>
+            <div class="ep-speaker-org">Institution / Company</div>
+            <div class="ep-speaker-topic">"AI-Driven Threat Intelligence at Scale"</div>
+        </div>
+        </div>
+
+        <div class="ep-speaker-card fade-in">
+        <div class="ep-speaker-media">
+            <img src="../images/speakers/Goat1.jpeg" alt="Speaker Name">
+            <div class="ep-speaker-overlay"></div>
+        </div>
+        <div class="ep-speaker-info">
+            <div class="ep-speaker-name">Speaker Name</div>
+            <div class="ep-speaker-role">Keynote</div>
+            <div class="ep-speaker-org">Institution / Company</div>
+            <div class="ep-speaker-topic">"AI-Driven Threat Intelligence at Scale"</div>
+        </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="ep-divider dark">
+
+  <!-- ─────────────── CTF ─────────────── -->
+  <section class="ep-section ctf-ep dark-section">
+    <div class="ep-wrap">
+      <div class="ep-label on-dark fade-in">Competition</div>
+      <h2 class="ep-title on-dark fade-in"><span>CTF</span> Finals 2025</h2>
+
+      <div class="ctf-ep-grid">
+        <div class="ctf-ep-body fade-in">
+          <p>
+            The 2025 CTF was the largest edition yet, drawing <strong>20 teams</strong> through
+            an online qualification round before the top 8 competed live at ENSA Marrakech.
+          </p>
+          <p>
+            Challenges spanned web exploitation, cryptography, digital forensics, binary analysis,
+            and a novel <strong>Adversarial AI</strong> category — where teams attacked and defended
+            deployed machine learning models in real-time.
+          </p>
+          <p>
+            The final scoreboard was contested down to the last hour, with the winning team solving
+            the AI challenge that stumped most competitors.
+          </p>
+        </div>
+
+        <div class="fade-in">
+          <div class="ctf-podium-title">Final Standings</div>
+          <div class="ctf-podium">
+            <div class="podium-row">
+              <div class="podium-rank gold">1</div>
+              <div class="podium-team">
+                <div class="podium-name">Team Name</div>
+                <div class="podium-detail">Institution · 5 members</div>
+              </div>
+              <div class="podium-score">4 250 pts</div>
+            </div>
+            <div class="podium-row">
+              <div class="podium-rank silver">2</div>
+              <div class="podium-team">
+                <div class="podium-name">Team Name</div>
+                <div class="podium-detail">Institution · 4 members</div>
+              </div>
+              <div class="podium-score">3 870 pts</div>
+            </div>
+            <div class="podium-row">
+              <div class="podium-rank bronze">3</div>
+              <div class="podium-team">
+                <div class="podium-name">Team Name</div>
+                <div class="podium-detail">Institution · 5 members</div>
+              </div>
+              <div class="podium-score">3 510 pts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ep-divider dark">
+
+  <!-- ─────────────── GALLERY ─────────────── -->
+  <section class="ep-section gallery-ep dark-section">
+    <div class="ep-wrap">
+      <div class="ep-label on-dark fade-in">Moments</div>
+      <h2 class="ep-title on-dark fade-in">Photo <span>Gallery</span></h2>
+      <p class="ep-lead on-dark fade-in">Scenes from three days at ENSA Marrakech.</p>
+
+      <div class="gallery-ep-masonry">
+        <div class="gal-ep-item fade-in" data-src="../images/event-4.jpg">
+          <img src="../images/editions/event-4.jpg" alt="AiSec 2025 – Opening ceremony">
+        </div>
+        <div class="gal-ep-item fade-in" data-src="../images/event-3.jpg">
+          <img src="../images/editions/event-3.jpg" alt="AiSec 2025 – Research session">
+        </div>
+        <div class="gal-ep-item fade-in" data-src="../images/event-2.jpg">
+          <img src="../images/editions/event-2.jpg" alt="AiSec 2025 – Workshop">
+        </div>
+        <div class="gal-ep-item fade-in" data-src="../images/event-1.jpg">
+          <img src="../images/editions/event-1.jpg" alt="AiSec 2025 – CTF arena">
+        </div>
+        <div class="gal-ep-item fade-in" data-src="../images/event-5.jpg">
+          <img src="../images/editions/event-5.jpg" alt="AiSec 2025 – Networking">
+        </div>
+        <div class="gal-ep-item fade-in" data-src="../images/editions/event-4.jpg">
+          <img src="../images/editions/event-4.jpg" alt="AiSec 2025 – Awards">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="ep-lightbox" id="epLightbox">
+    <button class="ep-lightbox-close" id="epLightboxClose">✕ Close</button>
+    <img id="epLightboxImg" src="" alt="">
+  </div>
+
+  <hr class="ep-divider dark">
+
+  <!-- ─────────────── SPONSORS ─────────────── -->
+  <section id="client" class="ep-section dark-section" style="background:var(--bg2)">
+    <div class="ep-wrap">
+      <div class="ep-label on-dark fade-in">Partners</div>
+      <h2 class="ep-title on-dark fade-in">Sponsors &amp; <span>Partners</span></h2>
+
+      <div style="margin-top:3rem">
+        <div class="sponsors-tier fade-in">
+          <div class="tier-label">Gold Partners</div>
+          <div class="sponsors-row">
+            <div class="sponsor-box gold">
+              <div class="sponsor-img-area"><img src="../images/logos/ensa1.png" alt="ENSA"></div>
+              <div class="sponsor-name">ENSA Marrakech</div>
+            </div>
+            <div class="sponsor-box gold">
+              <div class="sponsor-img-area"><img src="../images/logos/uca.png" alt="UCA"></div>
+              <div class="sponsor-name">Cadi Ayad University</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sponsors-tier fade-in">
+          <div class="tier-label">Community Partners</div>
+          <div class="sponsors-row">
+            <div class="sponsor-box">
+              <div class="sponsor-img-area"><img src="../images/logos/client-1.png" alt="Partner"></div>
+              <div class="sponsor-name">Partner Name</div>
+            </div>
+            <div class="sponsor-box">
+              <div class="sponsor-img-area"><img src="../images/logos/client-2.png" alt="Partner"></div>
+              <div class="sponsor-name">Partner Name</div>
+            </div>
+            <div class="sponsor-box">
+              <div class="sponsor-img-area"><img src="../images/logos/client-3.png" alt="Partner"></div>
+              <div class="sponsor-name">Partner Name</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── FOOTER ─────────────── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo">Ai<span>Sec</span> 2025</div>
+        <p>Past Edition Archive — ENSA Marrakech · Cadi Ayad University</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigate</h5>
+        <a href="../index.html#home">Home</a>
+        <a href="../index.html#editions">All Editions</a>
+        <a href="../conf/index.html">Conference</a>
+        <a href="../comp/index.html">CTF</a>
+      </div>
+      <div class="footer-col">
+        <h5>Edition</h5>
+        <a href="#">Download Proceedings</a>
+        <a href="#">Download Report</a>
+        <a href="#">CTF Write-ups</a>
+      </div>
+      <div class="footer-col">
+        <h5>AiSec Summit</h5>
+        <a href="../index.html#home">2026 Edition</a>
+        <a href="../index.html#client">Become a Sponsor</a>
+        <a href="../index.html#home">Reserve a Spot</a>
+      </div>
+    </div>
+    <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
+      <p>© 2026 <span>AiSec Summit</span> — Past Edition Archive</p>
+      <p><span>ENSA Marrakech</span> · Cadi Ayad University</p>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    // Nav scroll (mirrors script.js)
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () =>
+      navbar.classList.toggle('scrolled', window.scrollY > 40)
+    );
+    function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+    function closeMenu()  { document.getElementById('mobileMenu').classList.remove('open'); }
+
+    // Fade-in observer (mirrors script.js)
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: .1 });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+    // Lightbox
+    const lb    = document.getElementById('epLightbox');
+    const lbImg = document.getElementById('epLightboxImg');
+    document.querySelectorAll('.gal-ep-item').forEach(item => {
+      item.addEventListener('click', () => {
+        lbImg.src = item.dataset.src || item.querySelector('img').src;
+        lb.classList.add('open');
+      });
+    });
+    document.getElementById('epLightboxClose').addEventListener('click', () => lb.classList.remove('open'));
+    lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('open'); });
+  </script>
+
+</body>
+</html>

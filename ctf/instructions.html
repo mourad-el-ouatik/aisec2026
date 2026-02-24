@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Instructions | AISEC CTF 2025</title>
+  <link rel="shortcut icon" href="images/CRISIS_LOGO/crisis.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+  <style>
+    :root {
+      --red:        #e8071a;
+      --red-dim:    #8b0000;
+      --red-glow:   rgba(232,7,26,.55);
+      --red-faint:  rgba(232,7,26,.08);
+      --red-border: rgba(232,7,26,.25);
+      --surface:    rgba(8,2,2,.8);
+      --text:       #f0f0f0;
+      --muted:      rgba(220,185,185,.6);
+      --mono: 'Share Tech Mono', monospace;
+      --display: 'Orbitron', monospace;
+      --body: 'Rajdhani', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body { background: #000; color: var(--text); font-family: var(--body); overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: var(--red-dim); }
+    ::selection { background: var(--red); color: #000; }
+
+    #matrix-canvas { position: fixed; top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.15; }
+    .vignette { position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 20%,rgba(0,0,0,.88) 100%); }
+    .scanlines { position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.07) 3px,rgba(0,0,0,.07) 4px); }
+    #page { position:relative;z-index:2; }
+
+    /* NAVBAR */
+    #navbar {
+      position:fixed;top:0;left:0;right:0;z-index:200;
+      padding:.85rem 2.5rem;
+      display:flex;align-items:center;justify-content:space-between;
+      background:rgba(0,0,0,.94);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--red-border);
+    }
+    .nav-brand { font-family:var(--display);font-size:1.2rem;font-weight:900;letter-spacing:4px;text-decoration:none; }
+    .nav-brand .r { color:var(--red);text-shadow:0 0 20px var(--red-glow); }
+    .nav-brand .w { color:#fff; }
+    .nav-links { display:flex;gap:.05rem; }
+    .nav-links a {
+      font-family:var(--mono);font-size:.68rem;color:rgba(240,240,240,.6);text-decoration:none;
+      padding:.4rem .8rem;border:1px solid transparent;
+      letter-spacing:1.5px;text-transform:uppercase;transition:all .2s;
+    }
+    .nav-links a:hover,.nav-links a.active { color:var(--red);border-color:var(--red-border);background:var(--red-faint); }
+    .hamburger { display:none;flex-direction:column;gap:5px;cursor:pointer; }
+    .hamburger span { width:22px;height:2px;background:var(--red);display:block; }
+    .mob-nav {
+      display:none;flex-direction:column;
+      position:fixed;top:58px;left:0;right:0;z-index:199;
+      background:rgba(0,0,0,.97);border-bottom:1px solid var(--red-border);
+      padding:1rem 2rem 1.5rem;
+    }
+    .mob-nav.open { display:flex; }
+    .mob-nav a { font-family:var(--mono);font-size:.75rem;color:rgba(240,240,240,.6);text-decoration:none;padding:.7rem 0;border-bottom:1px solid rgba(232,7,26,.1);letter-spacing:2px;text-transform:uppercase;transition:color .2s; }
+    .mob-nav a:hover { color:var(--red); }
+
+    /* PAGE HERO */
+    .page-hero {
+      padding: 7rem 2.5rem 4rem;
+      position: relative;
+      border-bottom: 1px solid var(--red-border);
+      background: linear-gradient(180deg, rgba(30,0,0,.3), transparent);
+    }
+    .page-hero-inner { max-width: 1100px; margin: 0 auto; }
+    .ph-tag {
+      font-family:var(--mono);font-size:.68rem;color:var(--red);
+      letter-spacing:4px;text-transform:uppercase;
+      display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;
+      animation: slideUp .6s ease both;
+    }
+    .ph-tag::before { content:'>_';opacity:.4; }
+    .ph-title {
+      font-family:var(--display);font-size:clamp(2rem,6vw,4.5rem);font-weight:900;
+      letter-spacing:-1px;line-height:.95;
+      animation: slideUp .65s ease .1s both;
+    }
+    .ph-title .r { color:var(--red);text-shadow:0 0 30px var(--red-glow); }
+    .ph-title .w { color:#fff; }
+    .ph-rule { width:48px;height:2px;background:linear-gradient(90deg,var(--red),transparent);margin-top:.75rem; animation: slideUp .65s ease .15s both; }
+    @keyframes slideUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+    /* CONTENT */
+    .ctf-section { padding:4rem 2.5rem;position:relative;z-index:2; }
+    .ctf-section.alt { background:rgba(5,0,0,.4); }
+    .section-inner { max-width:1100px;margin:0 auto; }
+
+    .instructions-grid {
+      display:grid;grid-template-columns:1fr 1fr 1fr;
+      gap:1.5rem;margin-bottom:3rem;
+    }
+
+    .i-card {
+      background:var(--surface);border:1px solid var(--red-border);
+      padding:2rem;position:relative;overflow:hidden;
+      backdrop-filter:blur(8px);transition:border-color .3s,box-shadow .3s;
+      clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+    }
+    .i-card::before { content:'';position:absolute;top:0;left:0;width:2px;height:100%;background:linear-gradient(180deg,var(--red),transparent); }
+    .i-card:hover { border-color:rgba(232,7,26,.45);box-shadow:0 0 25px rgba(232,7,26,.1); }
+
+    .i-card-icon {
+      width:48px;height:48px;border:1px solid var(--red-border);
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.3rem;color:var(--red);margin-bottom:1.25rem;
+      background:var(--red-faint);
+      clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+    }
+    .i-card h3 {
+      font-family:var(--display);font-size:.8rem;font-weight:700;
+      color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:.75rem;
+    }
+    .i-card p,.i-card li { font-family:var(--body);font-size:.93rem;font-weight:300;color:var(--muted);line-height:1.85; }
+    .i-card ul { list-style:none;padding:0; }
+    .i-card ul li { position:relative;padding-left:1.2rem;margin-bottom:.4rem; }
+    .i-card ul li::before { content:'›';position:absolute;left:0;color:var(--red); }
+    .i-card ul ul { margin-top:.4rem;padding-left:.5rem; }
+    .i-card ul ul li::before { color:var(--muted); }
+    .i-card strong { color:var(--text);font-weight:600; }
+
+    /* Full-width block */
+    .i-full {
+      background:var(--surface);border:1px solid var(--red-border);
+      padding:2rem;position:relative;overflow:hidden;
+      backdrop-filter:blur(8px);margin-bottom:1.5rem;
+      clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+    }
+    .i-full::before { content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--red),transparent); }
+    .i-full h3 { font-family:var(--display);font-size:.85rem;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem; }
+    .i-full p,.i-full li { font-family:var(--body);font-size:.95rem;font-weight:300;color:var(--muted);line-height:1.85; }
+    .i-full ul { list-style:none;padding:0; }
+    .i-full ul li { padding-left:1.2rem;position:relative;margin-bottom:.35rem; }
+    .i-full ul li::before { content:'›';position:absolute;left:0;color:var(--red); }
+    .i-full strong { color:var(--text);font-weight:600; }
+
+    /* Phases grid */
+    .phases-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:3rem; }
+
+    /* Section head */
+    .sh { margin-bottom:2.5rem; }
+    .sh-tag { font-family:var(--mono);font-size:.65rem;color:var(--red);letter-spacing:3.5px;text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem; }
+    .sh-tag::before { content:'$';opacity:.4; }
+    .sh-title { font-family:var(--display);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:900;letter-spacing:-1px; }
+    .sh-title .r { color:var(--red);text-shadow:0 0 14px var(--red-glow); }
+    .sh-title .w { color:#fff; }
+    .sh-rule { width:40px;height:2px;background:linear-gradient(90deg,var(--red),transparent);margin-top:.6rem; }
+
+    /* CTA */
+    .cta-block { text-align:center;padding:4rem 2rem;border-top:1px solid var(--red-border); }
+    .btn-red {
+      font-family:var(--mono);font-size:.78rem;font-weight:bold;
+      letter-spacing:3px;text-transform:uppercase;
+      padding:.9rem 2.2rem;text-decoration:none;
+      display:inline-flex;align-items:center;gap:.7rem;
+      border:1px solid var(--red);color:var(--red);background:var(--red-faint);
+      position:relative;overflow:hidden;cursor:pointer;transition:color .3s;
+      clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+    }
+    .btn-red::after { content:'';position:absolute;inset:0;background:var(--red);transform:translateX(-105%);transition:transform .3s ease;z-index:0; }
+    .btn-red:hover::after { transform:translateX(0); }
+    .btn-red:hover { color:#000; }
+    .btn-red > * { position:relative;z-index:1; }
+    .cta-block p { font-family:var(--mono);font-size:.7rem;color:var(--muted);letter-spacing:2px;margin-top:1rem; }
+
+    /* FOOTER */
+    footer { background:rgba(0,0,0,.95);border-top:1px solid var(--red-border);padding:1.75rem 2rem;text-align:center;position:relative;z-index:2; }
+    footer p { font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase; }
+    footer .r { color:var(--red); }
+
+    /* Back to top */
+    #btt { position:fixed;bottom:1.5rem;right:1.5rem;z-index:50;width:40px;height:40px;background:rgba(0,0,0,.85);border:1px solid var(--red-border);color:var(--red);font-size:.9rem;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;opacity:0;pointer-events:none;transition:all .3s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px)); }
+    #btt.on { opacity:1;pointer-events:all; }
+    #btt:hover { background:var(--red);color:#000; }
+
+    @media(max-width:1024px) { .instructions-grid { grid-template-columns:1fr 1fr; } }
+    @media(max-width:768px) {
+      .nav-links { display:none; }.hamburger { display:flex; }
+      .instructions-grid { grid-template-columns:1fr; }
+      .phases-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="matrix-canvas"></canvas>
+<div class="vignette"></div>
+<div class="scanlines"></div>
+
+<div id="page">
+
+  <nav id="navbar">
+    <a href="index.html" class="nav-brand"><span class="r">AISEC</span><span class="w">CTF</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="index.html#dates">Dates</a>
+      <a href="index.html#partners">Partners</a>
+      <a href="instructions.html" class="active">Instructions</a>
+      <a href="https://discord.gg/swFVcu2Shx" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+    </div>
+    <div class="hamburger" id="ham"><span></span><span></span><span></span></div>
+  </nav>
+  <div class="mob-nav" id="mobnav">
+    <a href="index.html">Home</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#gallery">Gallery</a>
+    <a href="index.html#dates">Dates</a>
+    <a href="index.html#partners">Partners</a>
+    <a href="instructions.html">Instructions</a>
+    <a href="https://discord.gg/swFVcu2Shx" target="_blank">Discord</a>
+  </div>
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="ph-tag">cat instructions.md</div>
+      <h1 class="ph-title"><span class="r">INSTRUC</span><span class="w">TIONS</span></h1>
+      <div class="ph-rule"></div>
+    </div>
+  </div>
+
+  <!-- Overview Cards -->
+  <section class="ctf-section alt">
+    <div class="section-inner">
+      <div class="sh">
+        <div class="sh-tag">overview</div>
+        <h2 class="sh-title"><span class="r">GENERAL</span> <span class="w">OVERVIEW</span></h2>
+        <div class="sh-rule"></div>
+      </div>
+
+      <div class="instructions-grid">
+        <div class="i-card">
+          <div class="i-card-icon"><i class="fas fa-globe"></i></div>
+          <h3>Format</h3>
+          <p>Online competition with an <strong>onsite option exclusively</strong> for students from Marrakech. Participate from anywhere in the world.</p>
+        </div>
+        <div class="i-card">
+          <div class="i-card-icon"><i class="fas fa-user-graduate"></i></div>
+          <h3>Eligibility</h3>
+          <p>Open to <strong>all cybersecurity students</strong>. The finals are exclusively for students, verified through official student attestations.</p>
+        </div>
+        <div class="i-card">
+          <div class="i-card-icon"><i class="fas fa-clock"></i></div>
+          <h3>Duration</h3>
+          <p><strong>12 hours</strong> of non-stop hacking — from <strong>9:00 PM to 9:00 AM</strong>. The clock never stops. Neither should you.</p>
+        </div>
+      </div>
+
+      <!-- Challenge Type -->
+      <div class="i-full">
+        <h3><i class="fas fa-flag" style="margin-right:.5rem"></i>Challenge Type — Jeopardy Style</h3>
+        <p style="margin-bottom:1rem">Participants will face challenges across various cybersecurity categories. Solve challenges, accumulate points, and climb the scoreboard.</p>
+        <ul style="display:flex;flex-wrap:wrap;gap:.4rem;list-style:none;padding:0">
+          <li style="padding:0">
+            <span style="font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:.28rem .7rem;border:1px solid var(--red-border);color:var(--red);background:var(--red-faint)">Web Exploitation</span>
+          </li>
+          <li style="padding:0">
+            <span style="font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:.28rem .7rem;border:1px solid var(--red-border);color:var(--red);background:var(--red-faint)">Cryptography</span>
+          </li>
+          <li style="padding:0">
+            <span style="font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:.28rem .7rem;border:1px solid var(--red-border);color:var(--red);background:var(--red-faint)">Reverse Engineering</span>
+          </li>
+          <li style="padding:0">
+            <span style="font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:.28rem .7rem;border:1px solid var(--red-border);color:var(--red);background:var(--red-faint)">Forensics</span>
+          </li>
+          <li style="padding:0">
+            <span style="font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:.28rem .7rem;border:1px solid var(--red-border);color:var(--red);background:var(--red-faint)">Binary Exploitation</span>
+          </li>
+          <li style="padding:0">
+            <span style="font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:.28rem .7rem;border:1px solid var(--red-border);color:var(--red);background:var(--red-faint)">Miscellaneous</span>
+          </li>
+          <li style="padding:0">
+            <span style="font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:.28rem .7rem;border:1px solid var(--red-border);color:var(--red);background:var(--red-faint)">OSINT</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phases -->
+  <section class="ctf-section">
+    <div class="section-inner">
+      <div class="sh">
+        <div class="sh-tag">phases</div>
+        <h2 class="sh-title"><span class="r">COMPETITION</span> <span class="w">PHASES</span></h2>
+        <div class="sh-rule"></div>
+      </div>
+
+      <div class="phases-grid">
+        <div class="i-card">
+          <div class="i-card-icon"><i class="fas fa-laptop-code"></i></div>
+          <h3>Phase 1 — Qualification</h3>
+          <p style="margin-bottom:.75rem;color:var(--red);font-family:var(--mono);font-size:.68rem;letter-spacing:2px">APRIL 15–16, 2025</p>
+          <ul>
+            <li><strong>Format:</strong> Online &amp; Onsite (Marrakech students)</li>
+            <li><strong>Eligibility:</strong> Open to all cybersecurity students</li>
+            <li><strong>Duration:</strong> 12 hours (9pm &rarr; 9am)</li>
+            <li><strong>Type:</strong> Jeopardy Style challenges</li>
+            <li>Selected teams advance to the Finals</li>
+            <li>This phase is exclusively for students, verified through student attestations</li>
+          </ul>
+        </div>
+
+        <div class="i-card">
+          <div class="i-card-icon"><i class="fas fa-trophy"></i></div>
+          <h3>Phase 2 — Finals</h3>
+          <p style="margin-bottom:.75rem;color:var(--red);font-family:var(--mono);font-size:.68rem;letter-spacing:2px">MAY 13–14, 2025 — ONSITE</p>
+          <ul>
+            <li><strong>Jeopardy Round:</strong> All finalist teams compete</li>
+            <li><strong>Attack-Defense Round:</strong> Exclusively for the <strong>TOP 10</strong> ranked in the Jeopardy Round</li>
+            <li>Finals are held onsite at ENSA Marrakech</li>
+            <li>Winners announced at the AISEC 2025 ceremony on May 14th</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Team Registration -->
+      <div class="sh" style="margin-top:2rem">
+        <div class="sh-tag">register</div>
+        <h2 class="sh-title"><span class="r">TEAM</span> <span class="w">REGISTRATION</span></h2>
+        <div class="sh-rule"></div>
+      </div>
+
+      <div class="instructions-grid">
+        <div class="i-card">
+          <div class="i-card-icon"><i class="fas fa-users"></i></div>
+          <h3>Team Size</h3>
+          <p>Teams must consist of <strong>3 to 5 members</strong>. Solo participation is not allowed. Assemble your crew and hack together.</p>
+        </div>
+        <div class="i-card">
+          <div class="i-card-icon"><i class="fas fa-id-badge"></i></div>
+          <h3>Team Name</h3>
+          <p>Each team must register with a <strong>unique team name</strong>. Choose wisely — your reputation starts here.</p>
+        </div>
+        <div class="i-card">
+          <div class="i-card-icon"><i class="fas fa-user-shield"></i></div>
+          <h3>Registration Process</h3>
+          <p>Only the <strong>team captain</strong> must fill out the registration form. Provide accurate member information for verification.</p>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-block">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdDm52Tbo970EnX1Yd_Ycps88i6DngKjqlyPtYbITnZEHmeBw/viewform" target="_blank" class="btn-red">
+          <span>Register Your Team</span>
+          <i class="fas fa-arrow-right"></i>
+        </a>
+        <p>Registration closes April 5, 2025 &mdash; Don't miss out</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 &nbsp;<span class="r">AISEC CTF</span>&nbsp; &mdash; Club GCDSTE &mdash; ENSA Marrakech &mdash; Cadi Ayyad University</p>
+  </footer>
+
+</div>
+
+<a id="btt" href="#"><i class="fas fa-chevron-up"></i></a>
+
+<script>
+/* Matrix Rain */
+(function () {
+  const cvs = document.getElementById('matrix-canvas');
+  const ctx = cvs.getContext('2d');
+  let W, H, cols, drops;
+  const SZ = 13;
+  function init() {
+    W = cvs.width = window.innerWidth; H = cvs.height = window.innerHeight;
+    cols = Math.floor(W / SZ) + 1;
+    drops = Array.from({length: cols}, () => -(Math.random() * H / SZ));
+  }
+  function tick() {
+    ctx.fillStyle = 'rgba(0,0,0,0.06)'; ctx.fillRect(0, 0, W, H);
+    ctx.font = SZ + 'px "Share Tech Mono",monospace';
+    for (let i = 0; i < cols; i++) {
+      const y = drops[i] * SZ;
+      const r = Math.random();
+      if (r > 0.96) { ctx.fillStyle = '#ff5555'; ctx.shadowColor = '#ff0000'; ctx.shadowBlur = 9; }
+      else if (r > 0.75) { ctx.fillStyle = '#bb0000'; ctx.shadowBlur = 4; ctx.shadowColor = '#bb0000'; }
+      else if (r > 0.4) { ctx.fillStyle = '#770000'; ctx.shadowBlur = 0; }
+      else { ctx.fillStyle = '#3a0000'; ctx.shadowBlur = 0; }
+      ctx.fillText(Math.random() > .5 ? '1' : '0', i * SZ, y);
+      ctx.shadowBlur = 0;
+      if (y > H && Math.random() > 0.973) drops[i] = 0;
+      drops[i] += Math.random() * 0.6 + 0.3;
+    }
+  }
+  init(); window.addEventListener('resize', init); setInterval(tick, 48);
+})();
+
+/* Navbar */
+const nav = document.getElementById('navbar');
+const btt = document.getElementById('btt');
+window.addEventListener('scroll', () => btt.classList.toggle('on', window.scrollY > 300), {passive:true});
+document.getElementById('ham').addEventListener('click', () => document.getElementById('mobnav').classList.toggle('open'));
+document.querySelectorAll('.mob-nav a').forEach(a => a.addEventListener('click', () => document.getElementById('mobnav').classList.remove('open')));
+btt.addEventListener('click', e => { e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); });
+</script>
+</body>
+</html>
