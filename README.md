@@ -9,7 +9,7 @@
 ╚═╝  ╚═╝╚═╝╚══════╝╚══════╝ ╚═════╝    ╚══════╝ ╚═════╝ ╚══════╝╚══════╝
 ```
 
-### `5th Edition` · `16–18 May 2026` · `ENSA Marrakech` · `Morocco`
+### `6th Edition` · `16–18 May 2026` · `ENSA Marrakech` · `Morocco`
 
 **AI & Cybersecurity International Summit**  
 *The Premier AI × Security Event in Africa and the Arab World*
