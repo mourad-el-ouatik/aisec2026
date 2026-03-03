@@ -33,7 +33,7 @@ The summit unites **world-class researchers**, **industry leaders**, **governmen
 
 | `👥 Attendees` | `🎤 Speakers` | `📅 Editions` | `🗓️ Duration` |
 |:-:|:-:|:-:|:-:|
-| **1000+** | **60+** | **5** | **3 Days** |
+| **1000+** | **60+** | **6** | **3 Days** |
 
 </div>
 
