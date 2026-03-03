@@ -15,7 +15,7 @@
 *The Premier AI × Security Event in Africa and the Arab World*
 
 [![Live Site](https://img.shields.io/badge/🌐_Live_Site-aisec2026-00f5d4?style=for-the-badge&logoColor=white)](https://mourad-el-ouatik.github.io/aisec2026/)
-[![Edition](https://img.shields.io/badge/Edition-5th-blueviolet?style=for-the-badge)](https://mourad-el-ouatik.github.io/aisec2026/)
+[![Edition](https://img.shields.io/badge/Edition-6th-blueviolet?style=for-the-badge)](https://mourad-el-ouatik.github.io/aisec2026/)
 [![Location](https://img.shields.io/badge/📍_Venue-ENSA_Marrakech-ff6b6b?style=for-the-badge)](https://mourad-el-ouatik.github.io/aisec2026/)
 [![Duration](https://img.shields.io/badge/🗓️_Duration-3_Days-f7b731?style=for-the-badge)](https://mourad-el-ouatik.github.io/aisec2026/)
 
