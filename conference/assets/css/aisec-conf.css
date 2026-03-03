@@ -615,7 +615,7 @@ img { max-width: 100%; height: auto; }
 .schedule-content.active { display: block; }
 .timeline { display: flex; flex-direction: column; gap: 1px; }
 .timeline-item {
-  display: grid; grid-template-columns: 90px 1fr;
+  display: grid; grid-template-columns: 150px 1fr;
   border: 1px solid var(--border); background: var(--surface);
   border-radius: 5px; overflow: hidden; margin-bottom: 1px;
   transition: all .2s;
@@ -623,7 +623,7 @@ img { max-width: 100%; height: auto; }
 .timeline-item:hover { border-color: var(--border2); background: var(--surface2); }
 .timeline-time {
   background: rgba(122,184,255,.06); border-right: 1px solid var(--border);
-  padding: 1rem; font-family: var(--font-mono); font-size: .68rem; color: var(--accent);
+  padding: 1rem; font-family: var(--font-mono); font-size: .78rem; color: var(--accent);
   display: flex; align-items: center; justify-content: center; text-align: center; letter-spacing: 1px;
 }
 .timeline-body { padding: .9rem 1.25rem; }

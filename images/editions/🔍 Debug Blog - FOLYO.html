@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://localhost:8080/debug-blog.php -->
+<html lang="fr" crxlauncher=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>🔍 Debug Blog - FOLYO</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: monospace; background: #0f1117; color: #e2e8f0; padding: 20px; }
+        h1 { color: #63b3ed; font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid #2d3748; padding-bottom: 10px; }
+        h2 { color: #68d391; font-size: 1.1rem; margin: 20px 0 10px; }
+        .section { background: #1a202c; border: 1px solid #2d3748; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .ok   { color: #68d391; font-weight: bold; }
+        .fail { color: #fc8181; font-weight: bold; }
+        .warn { color: #f6e05e; font-weight: bold; }
+        .info { color: #63b3ed; }
+        pre { background: #2d3748; padding: 10px; border-radius: 4px; overflow-x: auto; font-size: 0.85rem; margin-top: 8px; white-space: pre-wrap; word-break: break-all; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        th { background: #2d3748; color: #a0aec0; text-align: left; padding: 8px 12px; }
+        td { border-top: 1px solid #2d3748; padding: 8px 12px; }
+        tr:hover td { background: #2d3748; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; }
+        .badge-green  { background: #276749; color: #9ae6b4; }
+        .badge-red    { background: #742a2a; color: #feb2b2; }
+        .badge-yellow { background: #744210; color: #faf089; }
+        .step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+        .step-num { background: #2b6cb0; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; }
+        .alert { padding: 12px 16px; border-radius: 6px; margin-top: 12px; border-left: 4px solid; }
+        .alert-danger  { background: #3b1a1a; border-color: #fc8181; color: #feb2b2; }
+        .alert-success { background: #1a3b2a; border-color: #68d391; color: #9ae6b4; }
+        .alert-warning { background: #3b2f1a; border-color: #f6e05e; color: #faf089; }
+    </style>
+<style></style></head>
+<body>
+<h1>🔍 Debug Blog FOLYO — 25/02/2026 11:39:46</h1><div class="section"><h2>📁 ÉTAPE 1 — Chargement des fichiers</h2><div class="step"><div class="step-num">✓</div><span class="ok">OK</span> &nbsp; config/database.php</div><div class="step"><div class="step-num">✓</div><span class="ok">OK</span> &nbsp; core/Database.php</div><div class="step"><div class="step-num">✓</div><span class="ok">OK</span> &nbsp; app/Models/BlogPost.php</div><div class="alert alert-success">✅ Tous les fichiers chargés avec succès.</div></div><div class="section"><h2>🔌 ÉTAPE 2 — Connexion PDO</h2><div class="step"><div class="step-num">✓</div><span class="ok">Connexion réussie</span></div><table>
+        <tbody><tr><th>Paramètre</th><th>Valeur</th><th>Statut</th></tr>
+        <tr><td>Driver</td><td>mysql</td><td><span class="badge badge-green">OK</span></td></tr>
+        <tr><td>Version serveur</td><td>8.0.45</td><td><span class="badge badge-green">OK</span></td></tr>
+        <tr><td>ATTR_EMULATE_PREPARES</td><td>false (requêtes natives)</td><td><span class="badge badge-red">⚠ OFF — Cause probable du bug LIMIT/OFFSET</span></td></tr>
+        <tr><td>ATTR_DEFAULT_FETCH_MODE</td><td>FETCH_ASSOC</td><td><span class="badge badge-green">OK</span></td></tr>
+    </tbody></table><div class="alert alert-danger">
+            ⚠ <strong>ATTR_EMULATE_PREPARES = false</strong> est la cause du bug.<br>
+            Avec les requêtes préparées natives, MySQL refuse les paramètres <code>LIMIT ?</code> passés comme strings.<br>
+            Les entiers <strong>doivent</strong> être bindés avec <code>PDO::PARAM_INT</code>.
+        </div></div><div class="section"><h2>🗄️ ÉTAPE 3 — Vérification de la table blog_post</h2><div class="step"><div class="step-num">✓</div><span class="ok">Table blog_post trouvée</span></div><table><tbody><tr><th>Colonne</th><th>Type</th><th>Null</th><th>Défaut</th></tr><tr><td>id</td><td>int</td><td>NO</td><td>NULL</td></tr><tr><td>author_id</td><td>int</td><td>NO</td><td>NULL</td></tr><tr><td>title</td><td>varchar(255)</td><td>NO</td><td>NULL</td></tr><tr><td>slug</td><td>varchar(255)</td><td>NO</td><td>NULL</td></tr><tr><td>content</td><td>text</td><td>NO</td><td>NULL</td></tr><tr><td>excerpt</td><td>text</td><td>YES</td><td>NULL</td></tr><tr><td>featured_image</td><td>varchar(255)</td><td>YES</td><td>NULL</td></tr><tr><td>category</td><td>enum('tutoriel','actualite','portfolio','archived')</td><td>YES</td><td>actualite</td></tr><tr><td>status</td><td>enum('draft','published','archived')</td><td>YES</td><td>draft</td></tr><tr><td>views_count</td><td>int</td><td>YES</td><td>0</td></tr><tr><td>published_at</td><td>timestamp</td><td>YES</td><td>NULL</td></tr><tr><td>created_at</td><td>timestamp</td><td>NO</td><td>CURRENT_TIMESTAMP</td></tr><tr><td>updated_at</td><td>timestamp</td><td>NO</td><td>CURRENT_TIMESTAMP</td></tr></tbody></table><br><div class="step"><div class="step-num">i</div><span class="info">Total enregistrements (brut SQL) : <strong>2</strong></span></div><table><tbody><tr><th>Status</th><th>Nombre</th></tr><tr><td>published</td><td>2</td></tr></tbody></table></div><div class="section"><h2>🧪 ÉTAPE 4 — Test LIMIT/OFFSET (cœur du bug)</h2><h2 style="color:#f6e05e; font-size:0.95rem; margin-top:10px;">Test A — LIMIT passé comme STRING (façon actuelle)</h2><div class="alert alert-success">✅ 2 résultat(s) — Pas de bug avec execute() simple ici.</div><pre>Array
+(
+    [0] =&gt; Array
+        (
+            [id] =&gt; 3
+            [title] =&gt; Bienvenue sur mon blog de design
+            [status] =&gt; published
+        )
+
+    [1] =&gt; Array
+        (
+            [id] =&gt; 6
+            [title] =&gt; Test de blog
+            [status] =&gt; published
+        )
+
+)
+</pre><h2 style="color:#68d391; font-size:0.95rem; margin-top:16px;">Test B — LIMIT bindé avec PDO::PARAM_INT (solution correcte)</h2><div class="alert alert-success">✅ 2 résultat(s) — bindValue PARAM_INT fonctionne !</div><pre>Array
+(
+    [0] =&gt; Array
+        (
+            [id] =&gt; 3
+            [title] =&gt; Bienvenue sur mon blog de design
+            [status] =&gt; published
+        )
+
+    [1] =&gt; Array
+        (
+            [id] =&gt; 6
+            [title] =&gt; Test de blog
+            [status] =&gt; published
+        )
+
+)
+</pre><h2 style="color:#68d391; font-size:0.95rem; margin-top:16px;">Test C — LIMIT interpolé dans le SQL (contournement rapide)</h2><div class="alert alert-success">✅ 2 résultat(s) — Interpolation fonctionne !</div><pre>Array
+(
+    [0] =&gt; Array
+        (
+            [id] =&gt; 3
+            [title] =&gt; Bienvenue sur mon blog de design
+            [status] =&gt; published
+        )
+
+    [1] =&gt; Array
+        (
+            [id] =&gt; 6
+            [title] =&gt; Test de blog
+            [status] =&gt; published
+        )
+
+)
+</pre></div><div class="section"><h2>🔗 ÉTAPE 5 — Test du JOIN avec la table user</h2><div class="step"><div class="step-num">✓</div><span class="ok">Table user trouvée</span></div><div class="alert alert-danger">❌ Exception : SQLSTATE[42S22]: Column not found: 1054 Unknown column 'u.username' in 'field list'</div></div><div class="section"><h2>⚙️ ÉTAPE 6 — Test des méthodes BlogPost</h2><h2 style="font-size:0.95rem; margin-top:10px; color:#a0aec0;">getAdminCount('all')</h2><div class="step"><div class="step-num">i</div><span class="info">Résultat : <strong>2</strong></span></div><div class="alert alert-success">✅ Count correct</div><h2 style="font-size:0.95rem; margin-top:16px; color:#a0aec0;">getAllForAdmin(1, 20, 'all')</h2><div class="alert alert-danger">❌ SQLSTATE[42S22]: Column not found: 1054 Unknown column 'u.username' in 'field list'</div><h2 style="font-size:0.95rem; margin-top:16px; color:#a0aec0;">getAllPublished(1, 9, 'all')</h2><div class="alert alert-danger">❌ SQLSTATE[42S22]: Column not found: 1054 Unknown column 'u.username' in 'field list'</div></div><div class="section"><h2>📋 ÉTAPE 7 — Résumé diagnostique &amp; Solution recommandée</h2><table>
+<tbody><tr><th>#</th><th>Test</th><th>Résultat attendu</th><th>Action si échec</th></tr>
+<tr><td>1</td><td>Fichiers chargés</td><td>Tous présents</td><td>Vérifier les chemins require_once</td></tr>
+<tr><td>2</td><td>Connexion PDO</td><td>Réussie</td><td>Vérifier config/database.php</td></tr>
+<tr><td>3</td><td>Table blog_post</td><td>Existe avec données</td><td>Vérifier la migration SQL</td></tr>
+<tr><td>4A</td><td>LIMIT string</td><td>Vide si bug EMULATE=false</td><td>→ Passer à Test B ou C</td></tr>
+<tr><td>4B</td><td>LIMIT PARAM_INT</td><td>Résultats</td><td>Corriger Database::query()</td></tr>
+<tr><td>4C</td><td>LIMIT interpolé</td><td>Résultats</td><td>Solution rapide BlogPost.php</td></tr>
+<tr><td>5</td><td>JOIN user</td><td>Résultats</td><td>Vérifier author_id vs user.id</td></tr>
+<tr><td>6</td><td>Méthodes BlogPost</td><td>Résultats</td><td>Voir tests 4 et 5</td></tr>
+</tbody></table>
+
+<div class="alert alert-warning" style="margin-top:16px;">
+⚠️ <strong>SUPPRIMER ce fichier après debug !</strong><br>
+Il expose la structure de votre base de données et ne doit jamais rester en production.
+</div></div></body></html>

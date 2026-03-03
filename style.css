@@ -567,9 +567,9 @@ section{position:relative;z-index:1}
 .program-content{display:none}
 .program-content.active{display:block}
 .timeline{display:flex;flex-direction:column;gap:1px}
-.timeline-item{display:grid;grid-template-columns:100px 1fr;border:1px solid var(--border-dark);background:var(--surface-dark);border-radius:4px;overflow:hidden;margin-bottom:1px;transition:all .2s}
+.timeline-item{display:grid;grid-template-columns:150px 1fr;border:1px solid var(--border-dark);background:var(--surface-dark);border-radius:4px;overflow:hidden;margin-bottom:1px;transition:all .2s}
 .timeline-item:hover{border-color:rgba(232,241,252,.4);background:var(--surface-dark2)}
-.timeline-time{background:rgba(232,241,252,.07);border-right:1px solid var(--border-dark);padding:1rem;font-family:var(--font-mono);font-size:.72rem;color:#a8ccf0;display:flex;align-items:center;justify-content:center;text-align:center;letter-spacing:1px}
+.timeline-time{background:rgba(232,241,252,.07);border-right:1px solid var(--border-dark);padding:1rem;font-family:var(--font-mono);font-size:.78rem;color:#a8ccf0;display:flex;align-items:center;justify-content:center;text-align:center;letter-spacing:1px}
 .timeline-body{padding:1rem 1.5rem}
 .timeline-body h4{font-family:var(--font-display);font-size:.9rem;font-weight:700;margin-bottom:.2rem;color:var(--text-on-dark)}
 .timeline-body p{color:var(--muted-dark);font-size:.82rem}

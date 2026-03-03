@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://localhost:8080/debug-blog.php -->
+<html lang="fr" crxlauncher=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>🔍 Debug Google Auth - FOLYO</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: monospace; background: #0f1117; color: #e2e8f0; padding: 20px; }
+        h1 { color: #63b3ed; font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid #2d3748; padding-bottom: 10px; }
+        h2 { color: #68d391; font-size: 1rem; margin: 20px 0 10px; }
+        .section { background: #1a202c; border: 1px solid #2d3748; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .ok   { color: #68d391; font-weight: bold; }
+        .fail { color: #fc8181; font-weight: bold; }
+        .warn { color: #f6e05e; font-weight: bold; }
+        .info { color: #63b3ed; }
+        pre { background: #2d3748; padding: 10px; border-radius: 4px; overflow-x: auto; font-size: 0.82rem; margin-top: 8px; white-space: pre-wrap; word-break: break-all; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        th { background: #2d3748; color: #a0aec0; text-align: left; padding: 8px 12px; }
+        td { border-top: 1px solid #2d3748; padding: 8px 12px; word-break: break-all; }
+        tr:hover td { background: #2d3748; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; }
+        .badge-green  { background: #276749; color: #9ae6b4; }
+        .badge-red    { background: #742a2a; color: #feb2b2; }
+        .badge-yellow { background: #744210; color: #faf089; }
+        .step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+        .step-num { background: #2b6cb0; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; }
+        .alert { padding: 12px 16px; border-radius: 6px; margin-top: 12px; border-left: 4px solid; }
+        .alert-danger  { background: #3b1a1a; border-color: #fc8181; color: #feb2b2; }
+        .alert-success { background: #1a3b2a; border-color: #68d391; color: #9ae6b4; }
+        .alert-warning { background: #3b2f1a; border-color: #f6e05e; color: #faf089; }
+        .btn { display: inline-block; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 10px; cursor: pointer; border: none; font-family: monospace; font-size: 0.9rem; }
+        .btn-blue   { background: #2b6cb0; color: white; }
+        .btn-green  { background: #276749; color: white; }
+        .btn-red    { background: #742a2a; color: white; }
+        code { background: #2d3748; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; }
+    </style>
+<style></style></head>
+<body>
+<h1>🔍 Debug Google OAuth FOLYO — 25/02/2026 12:22:29</h1><div class="section"><h2>🖥️ ÉTAPE 1 — Environnement serveur</h2><table><tbody><tr><th>Paramètre</th><th>Valeur</th></tr><tr><td>PHP Version</td><td>8.2.29</td></tr><tr><td>Server Software</td><td>nginx/1.29.5</td></tr><tr><td>HTTP_HOST</td><td>localhost:8080</td></tr><tr><td>SERVER_NAME</td><td>_</td></tr><tr><td>SERVER_PORT</td><td>80</td></tr><tr><td>HTTPS</td><td>off</td></tr><tr><td>REQUEST_URI</td><td>/debug-blog.php</td></tr><tr><td>DOCUMENT_ROOT</td><td>/var/www/html</td></tr><tr><td>__DIR__</td><td>/var/www/html</td></tr><tr><td>Script path</td><td>/var/www/html/debug-blog.php</td></tr></tbody></table><div class="alert alert-warning" style="margin-top:12px;">
+    ℹ️ URL de callback détectée automatiquement : <code>http://localhost:8080/folyo/auth/google-callback.php</code><br>
+    Cette URL doit être <strong>exactement</strong> dans vos Authorized redirect URIs Google.
+</div></div><div class="section"><h2>📁 ÉTAPE 2 — Fichiers requis</h2><div class="step"><div class="step-num">✓</div><span class="badge badge-green">✓ Trouvé</span> &nbsp; <span class="ok">config/google-config.php</span> <span class="info" style="margin-left:auto; font-size:0.8rem;">313 bytes</span></div><div class="step"><div class="step-num">✓</div><span class="badge badge-green">✓ Trouvé</span> &nbsp; <span class="ok">auth/google-login.php</span> <span class="info" style="margin-left:auto; font-size:0.8rem;">584 bytes</span></div><div class="step"><div class="step-num">✓</div><span class="badge badge-green">✓ Trouvé</span> &nbsp; <span class="ok">auth/google-callback.php</span> <span class="info" style="margin-left:auto; font-size:0.8rem;">4871 bytes</span></div><div class="step"><div class="step-num">✓</div><span class="badge badge-green">✓ Trouvé</span> &nbsp; <span class="ok">vendor/autoload.php</span> <span class="info" style="margin-left:auto; font-size:0.8rem;">748 bytes</span></div><div class="step"><div class="step-num">✗</div><span class="badge badge-red">✗ Manquant</span> &nbsp; <span class="fail">.env</span> <span class="info" style="margin-left:auto; font-size:0.8rem;">-</span></div></div><div class="section"><h2>⚙️ ÉTAPE 3 — Configuration Google OAuth</h2><table><tbody><tr><th>Clé</th><th>Valeur</th><th>Statut</th></tr><tr><td>client_id</td><td>398864180752-vsbdnogg4t8ujhi2v...</td><td><span class="badge badge-green">✓ Format OK</span></td></tr><tr><td>client_secret</td><td>***5-SQKU</td><td><span class="badge badge-green">✓ Format OK</span></td></tr><tr><td>redirect_uri</td><td>http://localhost:8080/folyo/auth/google-callback.php</td><td><span class="badge badge-green">✓ Correspond au serveur</span></td></tr></tbody></table></div><div class="section"><h2>📦 ÉTAPE 4 — Google Client Library (vendor)</h2><br>
+<b>Warning</b>:  require(/var/www/html/vendor/composer/../ralouphie/getallheaders/src/getallheaders.php): Failed to open stream: No such file or directory in <b>/var/www/html/vendor/composer/autoload_real.php</b> on line <b>41</b><br>
+<br>
+<b>Fatal error</b>:  Uncaught Error: Failed opening required '/var/www/html/vendor/composer/../ralouphie/getallheaders/src/getallheaders.php' (include_path='.:/usr/local/lib/php') in /var/www/html/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /var/www/html/vendor/composer/autoload_real.php(45): {closure}('7b11c4dc42b3b30...', '/var/www/html/v...')
+#1 /var/www/html/vendor/autoload.php(22): ComposerAutoloaderInitebda91f5643b684e5f1d84addd6b9e69::getLoader()
+#2 /var/www/html/debug-blog.php(201): require_once('/var/www/html/v...')
+#3 {main}
+  thrown in <b>/var/www/html/vendor/composer/autoload_real.php</b> on line <b>41</b><br>
+</div></body></html>
