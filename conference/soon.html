@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>COMING SOON | AISEC 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #050a0f;
+      --accent: #00e5ff;
+      --accent2: #7b2fff;
+      --text: #e8f0f7;
+      --muted: #6b8099;
+      --font-mono: 'Share Tech Mono', monospace;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow: hidden;
+    }
+
+    /* ── Background ── */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .bg-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: .10;
+      filter: saturate(0.4) brightness(0.6);
+    }
+
+    .bg-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 40%, rgba(0,229,255,.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 80% 80%, rgba(123,47,255,.10) 0%, transparent 60%),
+        linear-gradient(180deg, rgba(5,10,15,.5) 0%, rgba(5,10,15,.85) 60%, rgba(5,10,15,1) 100%);
+    }
+
+    /* Scanline effect */
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,.12) 2px,
+        rgba(0,0,0,.12) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* Grid lines */
+    .grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* ── Center content ── */
+    .stage {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* Logo */
+    .logo-mark {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp .6s .2s forwards;
+    }
+    .logo-mark span { color: var(--accent); }
+
+    /* Status pill */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(0,229,255,.07);
+      border: 1px solid rgba(0,229,255,.22);
+      border-radius: 999px;
+      padding: .35rem 1rem;
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      letter-spacing: .12em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp .6s .4s forwards;
+    }
+    .pill-dot {
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+
+    /* Main heading */
+    .headline {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(3.5rem, 12vw, 8rem);
+      line-height: .95;
+      letter-spacing: -.02em;
+      color: var(--text);
+      opacity: 0;
+      animation: fadeUp .7s .55s forwards;
+    }
+    .headline .hl {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Sub line */
+    .sub {
+      font-family: var(--font-mono);
+      font-size: .85rem;
+      color: var(--muted);
+      letter-spacing: .08em;
+      margin-top: 1.5rem;
+      opacity: 0;
+      animation: fadeUp .6s .75s forwards;
+    }
+
+    /* Divider */
+    .div-line {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      margin: 2.2rem auto;
+      opacity: 0;
+      animation: fadeIn .6s .9s forwards;
+    }
+
+    /* Back to Home button */
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: .82rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: .85rem 2rem;
+      border-radius: 3px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: color .3s, border-color .3s;
+      opacity: 0;
+      animation: fadeUp .6s 1.05s forwards;
+    }
+    .btn-home::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .3s ease;
+      z-index: -1;
+    }
+    .btn-home:hover { color: var(--bg); }
+    .btn-home:hover::before { transform: scaleX(1); }
+    .btn-home svg { width: 14px; height: 14px; transition: transform .3s; }
+    .btn-home:hover svg { transform: translateX(-3px); }
+
+    /* Corner decorations */
+    .corner {
+      position: fixed;
+      width: 40px; height: 40px;
+      opacity: .35;
+    }
+    .corner-tl { top: 24px; left: 24px; border-top: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); }
+    .corner-tr { top: 24px; right: 24px; border-top: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); }
+    .corner-bl { bottom: 24px; left: 24px; border-bottom: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); }
+    .corner-br { bottom: 24px; right: 24px; border-bottom: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); }
+
+    /* Bottom meta */
+    .bottom-meta {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+      opacity: 0;
+      animation: fadeIn .8s 1.3s forwards;
+      white-space: nowrap;
+    }
+    .bottom-meta span { color: rgba(0,229,255,.5); }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .5; transform: scale(.7); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="bg-layer">
+    <img src="assets/img/event/home.jpg" alt="" class="bg-img">
+    <div class="bg-overlay"></div>
+    <div class="grid-lines"></div>
+    <div class="scanlines"></div>
+  </div>
+
+  <!-- Corner brackets -->
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <!-- Main -->
+  <div class="stage">
+    <div class="logo-mark">Ai<span>Sec</span> &nbsp;2026</div>
+
+    <div class="pill">
+      <span class="pill-dot"></span>
+      Page under construction
+    </div>
+
+    <h1 class="headline">Coming<br><span class="hl">Soon</span></h1>
+
+    <p class="sub">16 – 18 May 2026 &nbsp;·&nbsp; ENSA Marrakech, Morocco</p>
+
+    <div class="div-line"></div>
+
+    <a href="../index.html" class="btn-home">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Back to Home
+    </a>
+  </div>
+
+  <div class="bottom-meta">
+    AISEC 2026 &nbsp;<span>//</span>&nbsp; International Conference on Artificial Intelligence &amp; Cybersecurity
+  </div>
+
+</body>
+</html>
