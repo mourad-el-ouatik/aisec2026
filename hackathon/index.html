@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Hack The Intelligence | AISEC 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080f;--accent:#00c8ff;--white:#f0f4ff;--gray:#8892aa;
+  --card:#ffffff08;--border:#ffffff12;
+  --font-head:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Share Tech Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 3rem;background:rgba(6,8,15,.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--font-head);font-size:1.05rem;font-weight:800;letter-spacing:.05em}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:.83rem;color:var(--gray);text-decoration:none;letter-spacing:.04em;transition:color .2s}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{font-family:var(--font-head);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:9px 20px;border-radius:4px;text-decoration:none;transition:opacity .2s,transform .15s}
+.nav-cta:hover{opacity:.88;transform:translateY(-1px)}
+
+/* HERO */
+#hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;padding:7rem 3rem 4rem}
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.1em;color:var(--accent);border:1px solid rgba(0,200,255,.25);padding:6px 14px;border-radius:2px;margin-bottom:2rem;animation:fadeUp .7s ease both}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-title{font-family:var(--font-head);font-size:clamp(3.5rem,7vw,6.5rem);font-weight:800;line-height:.95;letter-spacing:-.03em;margin-bottom:1.75rem;animation:fadeUp .8s .1s ease both}
+.hero-title .l1{color:var(--white);display:block}
+.hero-title .l2{color:rgba(240,244,255,.3);display:block}
+.hero-title .l3{display:block;background:linear-gradient(90deg,var(--accent) 0%,#4f8ef7 50%,#9b6dff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% auto;animation:shimmer 4s linear infinite}
+@keyframes shimmer{to{background-position:200% center}}
+.hero-sub{font-size:1rem;line-height:1.85;color:var(--gray);max-width:510px;margin-bottom:2.5rem;animation:fadeUp .8s .2s ease both}
+.hero-sub strong{color:var(--white);font-weight:500}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;animation:fadeUp .8s .3s ease both}
+.btn-primary{font-family:var(--font-head);font-weight:700;font-size:.83rem;letter-spacing:.06em;color:var(--bg);background:var(--accent);padding:13px 28px;border-radius:4px;text-decoration:none;transition:opacity .2s,transform .15s;box-shadow:0 0 24px rgba(0,200,255,.2)}
+.btn-primary:hover{opacity:.88;transform:translateY(-2px)}
+.btn-outline{font-family:var(--font-head);font-weight:600;font-size:.83rem;letter-spacing:.06em;color:var(--white);background:transparent;border:1px solid var(--border);padding:13px 24px;border-radius:4px;text-decoration:none;transition:border-color .2s,background .2s}
+.btn-outline:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.05)}
+.hero-stat-box{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;animation:fadeUp .8s .4s ease both;min-width:210px}
+.hero-stat{background:var(--card);padding:1.5rem 1.75rem;display:flex;flex-direction:column;align-items:center;text-align:center}
+.hero-stat .num{font-family:var(--font-head);font-size:1.9rem;font-weight:800;color:var(--accent);line-height:1}
+.hero-stat .label{font-size:.65rem;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* INFO BAR */
+.info-bar{position:relative;z-index:1;background:rgba(0,200,255,.05);border-top:1px solid rgba(0,200,255,.15);border-bottom:1px solid rgba(0,200,255,.15)}
+.info-bar-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.info-item{padding:1.3rem 1.75rem;display:flex;align-items:center;gap:1rem;border-right:1px solid var(--border)}
+.info-item:last-child{border-right:none}
+.info-icon{width:34px;height:34px;border-radius:6px;background:rgba(0,200,255,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.info-icon svg{width:15px;height:15px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.info-text b{display:block;font-size:.78rem;color:var(--white);font-weight:600;margin-bottom:2px}
+.info-text span{font-size:.73rem;color:var(--gray)}
+
+/* SECTIONS */
+.section{position:relative;z-index:1;padding:6rem 3rem}
+.section.alt{background:rgba(255,255,255,.018)}
+.section-inner{max-width:1200px;margin:0 auto}
+.section-tag{display:inline-flex;align-items:center;font-family:var(--font-mono);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:.7rem}
+.section-tag::before{content:'//';margin-right:.5rem;opacity:.4}
+.section-title{font-family:var(--font-head);font-size:clamp(1.9rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-.025em;margin-bottom:.5rem}
+.hl{color:var(--accent)}
+.section-divider{width:38px;height:2px;background:var(--accent);margin:1.2rem 0 1.65rem;opacity:.55}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.about-text p{color:var(--gray);font-size:.95rem;line-height:1.85;margin-bottom:1rem}
+.tags{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1.4rem}
+.tag{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.07em;padding:5px 11px;border-radius:3px;border:1px solid}
+.tag-cyan{color:#00c8ff;border-color:rgba(0,200,255,.3);background:rgba(0,200,255,.07)}
+.tag-blue{color:#4f8ef7;border-color:rgba(79,142,247,.3);background:rgba(79,142,247,.07)}
+.tag-purple{color:#9b6dff;border-color:rgba(155,109,255,.3);background:rgba(155,109,255,.07)}
+.tag-green{color:#3cf7a0;border-color:rgba(60,247,160,.3);background:rgba(60,247,160,.07)}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column}
+.step-item{display:flex;gap:1.25rem;padding:1.4rem;border:1px solid var(--border);border-bottom:none;background:var(--card);transition:background .2s}
+.step-item:first-child{border-radius:8px 8px 0 0}
+.step-item:last-child{border-radius:0 0 8px 8px;border-bottom:1px solid var(--border)}
+.step-item:hover{background:rgba(0,200,255,.05)}
+.step-num{font-family:var(--font-mono);font-size:.72rem;color:var(--accent);border:1px solid rgba(0,200,255,.3);border-radius:3px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-item h4{font-family:var(--font-head);font-size:.9rem;font-weight:700;margin-bottom:.3rem}
+.step-item p{font-size:.82rem;color:var(--gray);line-height:1.65}
+
+/* TRACKS */
+.tracks-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:2.5rem}
+.track-card{background:var(--card);padding:1.85rem 1.4rem;transition:background .25s;cursor:default;position:relative;overflow:hidden}
+.track-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--tc,var(--accent));transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.track-card:hover{background:rgba(255,255,255,.04)}
+.track-card:hover::after{transform:scaleX(1)}
+.track-label{font-family:var(--font-mono);font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tc,var(--accent));margin-bottom:.7rem;opacity:.75}
+.track-icon{width:42px;height:42px;border-radius:7px;background:rgba(255,255,255,.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem}
+.track-icon svg{width:19px;height:19px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.track-card h3{font-family:var(--font-head);font-size:.9rem;font-weight:700;margin-bottom:.45rem}
+.track-card p{font-size:.78rem;color:var(--gray);line-height:1.65}
+
+/* CONTENT CARDS */
+.content-cards{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:2.5rem}
+.content-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.65rem;transition:border-color .2s}
+.content-card:hover{border-color:rgba(0,200,255,.3)}
+.content-card h3{font-family:var(--font-head);font-size:.95rem;font-weight:700;margin-bottom:.7rem}
+.content-card p{font-size:.84rem;color:var(--gray);line-height:1.75}
+.content-card a{color:var(--accent);text-decoration:none}
+.content-card a:hover{text-decoration:underline}
+.mono-tag{font-family:var(--font-mono);font-size:.72rem;color:var(--accent);margin-top:.6rem;display:block;opacity:.8}
+
+/* CTA */
+.cta-section{position:relative;z-index:1;padding:5rem 3rem;text-align:center;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:280px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,200,255,.07),transparent 70%);pointer-events:none}
+.cta-section h2{font-family:var(--font-head);font-size:clamp(1.9rem,4vw,3rem);font-weight:800;letter-spacing:-.025em;margin-bottom:.9rem;position:relative}
+.cta-section p{color:var(--gray);font-size:1rem;margin-bottom:2.25rem;position:relative}
+.cta-section .btn-primary{position:relative;font-size:.88rem;padding:14px 34px}
+
+/* FOOTER */
+footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px solid var(--border);padding:3.5rem 3rem}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem}
+.footer-brand .logo{font-family:var(--font-head);font-size:1.3rem;font-weight:800;margin-bottom:.75rem}
+.footer-brand .logo span{color:var(--accent)}
+.footer-brand p{font-size:.8rem;color:var(--gray);line-height:1.85}
+.footer-col h5{font-family:var(--font-head);font-size:.75rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--white);margin-bottom:1rem}
+.footer-col a{display:block;font-size:.8rem;color:var(--gray);text-decoration:none;margin-bottom:.5rem;transition:color .2s}
+.footer-col a:hover{color:var(--white)}
+.footer-bottom{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;border-top:1px solid var(--border);font-size:.73rem;color:var(--gray);flex-wrap:wrap;gap:.5rem}
+.footer-bottom span{color:var(--accent)}
+
+/* SCROLL FADE */
+.fade-in{opacity:0;transform:translateY(16px);transition:opacity .65s ease,transform .65s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}.nav-links{display:none}
+  .hero-inner{grid-template-columns:1fr}.hero-stat-box{display:none}
+  #hero{padding:6rem 1.5rem 3rem}
+  .info-bar-inner{grid-template-columns:1fr 1fr}
+  .info-item{border-bottom:1px solid var(--border)}
+  .about-grid,.tracks-grid,.content-cards{grid-template-columns:1fr}
+  .section{padding:4rem 1.5rem}
+  .footer-inner{grid-template-columns:1fr 1fr;gap:2rem}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <div class="nav-logo">Ai<span>Sec</span> 2026</div>
+  <ul class="nav-links">
+    <li><a href="index.html">Conference</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#tracks">Tracks</a></li>
+    <li><a href="#participate">Participate</a></li>
+  </ul>
+  <a href="https://forms.gle/PekPTzDi6UmSXzTR7" target="_blank" class="nav-cta">Register Now</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge"><span class="dot"></span> Registration Open &mdash; May 15, 2026</div>
+      <h1 class="hero-title">
+        <span class="l1">Hack</span>
+        <span class="l2">The</span>
+        <span class="l3">Intelligence</span>
+      </h1>
+      <p class="hero-sub">
+        As part of the <strong>AISEC International Summit 2026</strong>, Hack The Intelligence is a national innovation competition bringing together ambitious students and innovators from across Morocco.
+      </p>
+      <div class="hero-btns">
+        <a href="https://forms.gle/PekPTzDi6UmSXzTR7" target="_blank" class="btn-primary">Register Now &rarr;</a>
+        <a href="#about" class="btn-outline">Learn More</a>
+      </div>
+    </div>
+    <div class="hero-stat-box">
+      <div class="hero-stat"><span class="num">4</span><span class="label">Tracks</span></div>
+      <div class="hero-stat"><span class="num">1</span><span class="label">Day</span></div>
+      <div class="hero-stat"><span class="num">May</span><span class="label">15, 2026</span></div>
+      <div class="hero-stat"><span class="num">ENSA</span><span class="label">Marrakesh</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO BAR -->
+<div class="info-bar">
+  <div class="info-bar-inner">
+    <div class="info-item fade-in">
+      <div class="info-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+      <div class="info-text"><b>Location</b><span>ENSA Marrakesh, Morocco</span></div>
+    </div>
+    <div class="info-item fade-in">
+      <div class="info-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="info-text"><b>Pitch Day</b><span>May 15, 2026</span></div>
+    </div>
+    <div class="info-item fade-in">
+      <div class="info-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div>
+      <div class="info-text"><b>Event</b><span>AISEC International Summit 2026</span></div>
+    </div>
+    <div class="info-item fade-in">
+      <div class="info-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="info-text"><b>Open To</b><span>Students &amp; Innovators</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-text fade-in">
+        <div class="section-tag">About the Competition</div>
+        <h2 class="section-title">Welcome to <span class="hl">Hack The Intelligence</span></h2>
+        <div class="section-divider"></div>
+        <p>Hack The Intelligence is a national innovation competition hosted as part of the <strong style="color:var(--white);font-weight:500">AISEC International Summit 2026</strong> — the premier international conference on Artificial Intelligence and Cybersecurity.</p>
+        <p>Participants are encouraged to register, develop their projects in advance, and pitch their innovative ideas in front of a panel of experts and professionals from industry and academia.</p>
+        <p>Whether you're working on AI-powered security solutions, smart city innovations, IoT systems, or cybersecurity tools — this competition is your chance to turn ideas into impactful solutions.</p>
+        <div class="tags">
+          <span class="tag tag-cyan">Cybersecurity</span>
+          <span class="tag tag-blue">Artificial Intelligence</span>
+          <span class="tag tag-purple">IoT</span>
+          <span class="tag tag-green">Smart Cities</span>
+        </div>
+        <div style="margin-top:2rem"><a href="https://forms.gle/PekPTzDi6UmSXzTR7" target="_blank" class="btn-primary">Register Your Team &rarr;</a></div>
+      </div>
+      <div class="fade-in">
+        <div class="steps">
+          <div class="step-item"><div class="step-num">01</div><div><h4>Register</h4><p>Sign up via the registration link and form your team. Solo participants are welcome too.</p></div></div>
+          <div class="step-item"><div class="step-num">02</div><div><h4>Build Your Project</h4><p>Develop your solution ahead of the event. Focus on real-world impact in one of the four competition tracks.</p></div></div>
+          <div class="step-item"><div class="step-num">03</div><div><h4>Pitch at AISEC 2026</h4><p>Present your innovation live at ENSA Marrakesh on May 15, 2026 in front of a panel of experts and professionals.</p></div></div>
+          <div class="step-item"><div class="step-num">04</div><div><h4>Make an Impact</h4><p>Connect with industry leaders, earn recognition, and showcase your creativity on a national stage.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACKS -->
+<section class="section alt" id="tracks">
+  <div class="section-inner">
+    <div class="section-tag">Competition Tracks</div>
+    <h2 class="section-title">Choose Your <span class="hl">Challenge</span></h2>
+    <div class="section-divider"></div>
+    <p style="color:var(--gray);max-width:540px;line-height:1.85;font-size:.95rem">Four cutting-edge domains. One chance to prove your innovation. Build solutions that address real-world challenges.</p>
+    <div class="tracks-grid">
+      <div class="track-card fade-in" style="--tc:#4f8ef7">
+        <div class="track-label">Track 01</div>
+        <div class="track-icon"><svg viewBox="0 0 24 24" stroke="#4f8ef7"><path d="M12 2L4 6v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+        <h3>Cybersecurity</h3>
+        <p>Threat detection, vulnerability assessment, secure systems, and digital defense tools.</p>
+      </div>
+      <div class="track-card fade-in" style="--tc:#9b6dff">
+        <div class="track-label">Track 02</div>
+        <div class="track-icon"><svg viewBox="0 0 24 24" stroke="#9b6dff"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+        <h3>Artificial Intelligence</h3>
+        <p>Machine learning, NLP, computer vision, and AI-driven automation solutions.</p>
+      </div>
+      <div class="track-card fade-in" style="--tc:#00c8ff">
+        <div class="track-label">Track 03</div>
+        <div class="track-icon"><svg viewBox="0 0 24 24" stroke="#00c8ff"><circle cx="12" cy="12" r="2"/><path d="M8.56 2.9A9.9 9.9 0 0 0 2.1 8.56m1.7 6.88a9.9 9.9 0 0 0 5.76 5.66m5.88-1.8a9.9 9.9 0 0 0 6.46-5.7m-1.7-6.88a9.9 9.9 0 0 0-5.76-5.66"/></svg></div>
+        <h3>Internet of Things</h3>
+        <p>Connected devices, sensor networks, edge computing, and smart embedded systems.</p>
+      </div>
+      <div class="track-card fade-in" style="--tc:#3cf7a0">
+        <div class="track-label">Track 04</div>
+        <div class="track-icon"><svg viewBox="0 0 24 24" stroke="#3cf7a0"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <h3>Smart Cities</h3>
+        <p>Urban tech, mobility, infrastructure, and data-driven city innovation solutions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTICIPATE -->
+<section class="section" id="participate">
+  <div class="section-inner">
+    <div class="section-tag">How to Join</div>
+    <h2 class="section-title">Participate &amp; <span class="hl">Compete</span></h2>
+    <div class="section-divider"></div>
+    <div class="content-cards">
+      <div class="content-card fade-in">
+        <h3>Registration</h3>
+        <p>Register your team via our official Google Form. Individual participants are also welcome. You'll receive all guidelines and event details after signing up.</p>
+        <span class="mono-tag">forms.gle/PekPTzDi6UmSXzTR7</span>
+        <div style="margin-top:1.2rem"><a href="https://forms.gle/PekPTzDi6UmSXzTR7" target="_blank" class="btn-primary" style="font-size:.78rem;padding:10px 20px">Register &rarr;</a></div>
+      </div>
+      <div class="content-card fade-in">
+        <h3>Pitch Day &mdash; May 15, 2026</h3>
+        <p>Present your project live at ENSA Marrakesh in front of a jury of experts and professionals from industry and academia during the AISEC International Summit.</p>
+        <span class="mono-tag">AISEC International Summit 2026 &mdash; ENSA Marrakesh</span>
+      </div>
+      <div class="content-card fade-in">
+        <h3>Who Should Apply</h3>
+        <p>Engineering students, CS undergraduates, graduate researchers, and passionate innovators from any Moroccan institution. Multi-disciplinary teams are especially encouraged.</p>
+      </div>
+      <div class="content-card fade-in">
+        <h3>Contact &amp; Info</h3>
+        <p>For questions about the competition, reach the organizing team via the AISEC conference email address below.</p>
+        <p style="margin-top:.6rem">Contact: <a href="mailto:aisec@uca.ac.ma">aisec@uca.ac.ma</a></p>
+        <span class="mono-tag">Subject: Hack The Intelligence &mdash; Inquiry</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-glow"></div>
+  <h2>Ready to Innovate?</h2>
+  <p>Don't miss this opportunity to compete, connect, and make an impact.</p>
+  <a href="https://forms.gle/PekPTzDi6UmSXzTR7" target="_blank" class="btn-primary">Register for Hack The Intelligence &rarr;</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">Hack The <span>Intelligence</span></div>
+      <p>National Innovation Competition<br>As part of the AISEC International Summit 2026<br>ENSA &mdash; Cadi Ayyad University, Marrakech, Morocco</p>
+    </div>
+    <div class="footer-col">
+      <h5>Competition</h5>
+      <a href="#about">About</a>
+      <a href="#tracks">Tracks</a>
+      <a href="#participate">How to Join</a>
+      <a href="https://forms.gle/PekPTzDi6UmSXzTR7" target="_blank">Register</a>
+    </div>
+    <div class="footer-col">
+      <h5>AISEC 2026</h5>
+      <a href="index.html">Conference</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="venue.html">Venue</a>
+      <a href="speakers.html">Speakers</a>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <a href="mailto:aisec@uca.ac.ma">aisec@uca.ac.ma</a>
+      <a href="https://ensa-marrakech.uca.ma/en/" target="_blank">ENSA Marrakech</a>
+      <a href="https://www.uca.ma/fr" target="_blank">Cadi Ayyad University</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 <span>AISEC International Summit</span> &mdash; All rights reserved</p>
+    <p><span>ENSA Marrakech</span> &bull; Cadi Ayyad University</p>
+  </div>
+</footer>
+
+<script>
+// ── PARTICLE CANVAS ──
+const canvas=document.getElementById('bg-canvas');
+const ctx=canvas.getContext('2d');
+let W,H;
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+
+const COLORS=['#00c8ff','#4f8ef7','#9b6dff','#ffffff'];
+const particles=Array.from({length:120},()=>mkParticle());
+function mkParticle(){
+  return{
+    x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,
+    vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
+    r:Math.random()*1.4+.3,
+    a:Math.random()*.45+.15,
+    c:COLORS[Math.floor(Math.random()*COLORS.length)]
+  }
+}
+function animate(){
+  ctx.clearRect(0,0,W,H);
+  // connection lines
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){
+        ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(0,200,255,${(.07*(1-d/120)).toFixed(3)})`;
+        ctx.lineWidth=.5;ctx.stroke();
+      }
+    }
+  }
+  // dots
+  particles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;
+    if(p.y<0||p.y>H)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.c;ctx.globalAlpha=p.a;ctx.fill();ctx.globalAlpha=1;
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+// ── SCROLL FADE ──
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})
+},{threshold:.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
