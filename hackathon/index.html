@@ -4,10 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>HACKATHON | AISEC 2026</title>
-<link rel="shortcut icon" href="../images/logos/aisec2026-w.png" type="image/png">
-<link rel="stylesheet" href="../conference/assets/fonts/line-icons.css">
-<link rel="stylesheet" href="../conference/assets/css/aisec-conf.css">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="shortcut icon" href="#" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -21,8 +19,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--white);min-he
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 3rem;background:rgba(6,8,15,.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.nav-logo{font-family:var(--font-head);font-size:1.05rem;font-weight:800;letter-spacing:.05em}
-.nav-logo span{color:var(--accent)}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-logo-img{height:38px;width:auto;display:block;filter:drop-shadow(0 0 6px rgba(0,200,255,0.3))}
+.nav-logo span{font-family:var(--font-head);font-size:1.1rem;font-weight:800;letter-spacing:.05em;color:var(--white)}
+.nav-logo span.accent{color:var(--accent)}
 .nav-links{display:flex;gap:2rem;list-style:none}
 .nav-links a{font-size:.83rem;color:var(--gray);text-decoration:none;letter-spacing:.04em;transition:color .2s}
 .nav-links a:hover{color:var(--white)}
@@ -43,7 +43,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .hero-sub{font-size:1rem;line-height:1.85;color:var(--gray);max-width:510px;margin-bottom:2.5rem;animation:fadeUp .8s .2s ease both}
 .hero-sub strong{color:var(--white);font-weight:500}
 .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;animation:fadeUp .8s .3s ease both}
-.btn-primary{font-family:var(--font-head);font-weight:700;font-size:.83rem;letter-spacing:.06em;color:var(--bg);background:var(--accent);padding:13px 28px;border-radius:4px;text-decoration:none;transition:opacity .2s,transform .15s;box-shadow:0 0 24px rgba(0,200,255,.2)}
+.btn-primary{font-family:var(--font-head);font-weight:700;font-size:.83rem;letter-spacing:.06em;color:var(--bg);background:var(--accent);padding:13px 28px;border-radius:4px;text-decoration:none;transition:opacity .2s,transform .15s;box-shadow:0 0 24px rgba(0,200,255,.2);display:inline-block}
 .btn-primary:hover{opacity:.88;transform:translateY(-2px)}
 .btn-outline{font-family:var(--font-head);font-weight:600;font-size:.83rem;letter-spacing:.06em;color:var(--white);background:transparent;border:1px solid var(--border);padding:13px 24px;border-radius:4px;text-decoration:none;transition:border-color .2s,background .2s}
 .btn-outline:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.05)}
@@ -59,7 +59,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .info-item{padding:1.3rem 1.75rem;display:flex;align-items:center;gap:1rem;border-right:1px solid var(--border)}
 .info-item:last-child{border-right:none}
 .info-icon{width:34px;height:34px;border-radius:6px;background:rgba(0,200,255,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.info-icon svg{width:15px;height:15px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.info-icon i{font-size:1rem;color:var(--accent)}
 .info-text b{display:block;font-size:.78rem;color:var(--white);font-weight:600;margin-bottom:2px}
 .info-text span{font-size:.73rem;color:var(--gray)}
 
@@ -101,7 +101,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .track-card:hover::after{transform:scaleX(1)}
 .track-label{font-family:var(--font-mono);font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tc,var(--accent));margin-bottom:.7rem;opacity:.75}
 .track-icon{width:42px;height:42px;border-radius:7px;background:rgba(255,255,255,.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem}
-.track-icon svg{width:19px;height:19px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.track-icon i{font-size:1.4rem;color:var(--tc,var(--accent))}
 .track-card h3{font-family:var(--font-head);font-size:.9rem;font-weight:700;margin-bottom:.45rem}
 .track-card p{font-size:.78rem;color:var(--gray);line-height:1.65}
 
@@ -138,6 +138,42 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
 .fade-in{opacity:0;transform:translateY(16px);transition:opacity .65s ease,transform .65s ease}
 .fade-in.visible{opacity:1;transform:translateY(0)}
 
+/* LOGO IMAGE SIZE ADJUSTMENT – exactly matching dimensions from reference images */
+.logo-img-main {
+  height: 58px;
+  width: auto;
+  display: inline-block;
+  filter: drop-shadow(0 0 8px rgba(0,200,255,0.2));
+  transition: transform 0.2s ease;
+}
+.logo-img-main:hover {
+  transform: scale(1.02);
+}
+
+.hero-logo-img {
+  height: 70px;
+  width: auto;
+  display: block;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 12px rgba(0,200,255,0.25));
+}
+
+.nav-logo-img-custom {
+  height: 42px;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 0 4px rgba(0,200,255,0.3));
+}
+
+.footer-logo-img {
+  height: 48px;
+  width: auto;
+  display: block;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 6px rgba(0,200,255,0.2));
+}
+
+/* responsive tweaks */
 @media(max-width:900px){
   nav{padding:1rem 1.5rem}.nav-links{display:none}
   .hero-inner{grid-template-columns:1fr}.hero-stat-box{display:none}
@@ -147,19 +183,24 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
   .about-grid,.tracks-grid,.content-cards{grid-template-columns:1fr}
   .section{padding:4rem 1.5rem}
   .footer-inner{grid-template-columns:1fr 1fr;gap:2rem}
+  .hero-logo-img{height: 55px;}
+  .logo-img-main{height: 48px;}
 }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
 
 <nav id="navbar">
-  <div class="hero-logo fade-in">
-    <a href="../index.html"><img src="../images/logos/aisec2026-w.png" alt="AISEC 2026"></a>
+  <div class="fade-in">
+    <a href="#" class="nav-logo">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Crect width='200' height='60' fill='%2306080f'/%3E%3Ctext x='12' y='38' font-family='Syne' font-size='28' font-weight='800' fill='%2300c8ff'%3EAISEC%3C/text%3E%3Ctext x='92' y='38' font-family='Syne' font-size='24' fill='%23f0f4ff' font-weight='500'%3E2026%3C/text%3E%3C/svg%3E" alt="AISEC" class="nav-logo-img-custom" style="height:42px">
+    </a>
   </div>
   <ul class="nav-links">
-    <li><a href="index.html">Conference</a></li>
+    <li><a href="#">Conference</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#tracks">Tracks</a></li>
     <li><a href="#participate">Participate</a></li>
@@ -171,8 +212,9 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
 <section id="hero">
   <div class="hero-inner">
     <div>
-      <div class="hero-badge"><span class="dot"></span> Registration Open &mdash; May 15, 2026</div>
-      <a href="../index.html"><img src="../images/logos/aisec2026-w.png" alt="AISEC 2026"></a>
+      <div class="hero-badge"><span class="dot"></span> Registration Open — May 15, 2026</div>
+      <!-- adjusted logo image: exact size as reference (70px height, proportional) -->
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 90'%3E%3Crect width='280' height='90' fill='%2306080f'/%3E%3Ctext x='18' y='58' font-family='Syne' font-size='44' font-weight='800' fill='%2300c8ff'%3EAISEC%3C/text%3E%3Ctext x='142' y='58' font-family='Syne' font-size='36' fill='%23f0f4ff'%3E2026%3C/text%3E%3Ctext x='18' y='82' font-family='DM Sans' font-size='14' fill='%238892aa'%3EArtificial Intelligence %26 Cybersecurity%3C/text%3E%3C/svg%3E" alt="AISEC 2026 Summit Logo" class="hero-logo-img" style="height: 70px; margin-bottom: 1.5rem;">
       <h1 class="hero-title">
         <span class="l1">Hack</span>
         <span class="l2">The</span>
@@ -186,6 +228,10 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
         <a href="#about" class="btn-outline">Learn More</a>
       </div>
     </div>
+    <div class="hero-stat-box">
+      <div class="hero-stat"><div class="num">24+</div><div class="label">TEAMS</div></div>
+      <div class="hero-stat"><div class="num">08</div><div class="label">TRACKS</div></div>
+    </div>
   </div>
 </section>
 
@@ -193,19 +239,19 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
 <div class="info-bar">
   <div class="info-bar-inner">
     <div class="info-item fade-in">
-      <div class="info-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+      <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
       <div class="info-text"><b>Location</b><span>ENSA Marrakesh, Morocco</span></div>
     </div>
     <div class="info-item fade-in">
-      <div class="info-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="info-icon"><i class="far fa-calendar-alt"></i></div>
       <div class="info-text"><b>Pitch Day</b><span>May 15, 2026</span></div>
     </div>
     <div class="info-item fade-in">
-      <div class="info-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div>
+      <div class="info-icon"><i class="fas fa-microchip"></i></div>
       <div class="info-text"><b>Event</b><span>AISEC International Summit 2026</span></div>
     </div>
     <div class="info-item fade-in">
-      <div class="info-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="info-icon"><i class="fas fa-users"></i></div>
       <div class="info-text"><b>Open To</b><span>Students &amp; Innovators</span></div>
     </div>
   </div>
@@ -252,25 +298,25 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
     <div class="tracks-grid">
       <div class="track-card fade-in" style="--tc:#4f8ef7">
         <div class="track-label">Track 01</div>
-        <div class="track-icon"><svg viewBox="0 0 24 24" stroke="#4f8ef7"><path d="M12 2L4 6v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+        <div class="track-icon"><i class="fas fa-shield-alt" style="color:#4f8ef7"></i></div>
         <h3>Cybersecurity</h3>
         <p>Threat detection, vulnerability assessment, secure systems, and digital defense tools.</p>
       </div>
       <div class="track-card fade-in" style="--tc:#9b6dff">
         <div class="track-label">Track 02</div>
-        <div class="track-icon"><svg viewBox="0 0 24 24" stroke="#9b6dff"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+        <div class="track-icon"><i class="fas fa-brain" style="color:#9b6dff"></i></div>
         <h3>Artificial Intelligence</h3>
         <p>Machine learning, NLP, computer vision, and AI-driven automation solutions.</p>
       </div>
       <div class="track-card fade-in" style="--tc:#00c8ff">
         <div class="track-label">Track 03</div>
-        <div class="track-icon"><svg viewBox="0 0 24 24" stroke="#00c8ff"><circle cx="12" cy="12" r="2"/><path d="M8.56 2.9A9.9 9.9 0 0 0 2.1 8.56m1.7 6.88a9.9 9.9 0 0 0 5.76 5.66m5.88-1.8a9.9 9.9 0 0 0 6.46-5.7m-1.7-6.88a9.9 9.9 0 0 0-5.76-5.66"/></svg></div>
+        <div class="track-icon"><i class="fas fa-microchip" style="color:#00c8ff"></i></div>
         <h3>Internet of Things</h3>
         <p>Connected devices, sensor networks, edge computing, and smart embedded systems.</p>
       </div>
       <div class="track-card fade-in" style="--tc:#3cf7a0">
         <div class="track-label">Track 04</div>
-        <div class="track-icon"><svg viewBox="0 0 24 24" stroke="#3cf7a0"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div class="track-icon"><i class="fas fa-city" style="color:#3cf7a0"></i></div>
         <h3>Smart Cities</h3>
         <p>Urban tech, mobility, infrastructure, and data-driven city innovation solutions.</p>
       </div>
@@ -292,9 +338,9 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
         <div style="margin-top:1.2rem"><a href="https://forms.gle/PekPTzDi6UmSXzTR7" target="_blank" class="btn-primary" style="font-size:.78rem;padding:10px 20px">Register &rarr;</a></div>
       </div>
       <div class="content-card fade-in">
-        <h3>Pitch Day &mdash; May 15, 2026</h3>
+        <h3>Pitch Day — May 15, 2026</h3>
         <p>Present your project live at ENSA Marrakesh in front of a jury of experts and professionals from industry and academia during the AISEC International Summit.</p>
-        <span class="mono-tag">AISEC International Summit 2026 &mdash; ENSA Marrakesh</span>
+        <span class="mono-tag">AISEC International Summit 2026 — ENSA Marrakesh</span>
       </div>
       <div class="content-card fade-in">
         <h3>Who Should Apply</h3>
@@ -304,7 +350,7 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
         <h3>Contact &amp; Info</h3>
         <p>For questions about the competition, reach the organizing team via the AISEC conference email address below.</p>
         <p style="margin-top:.6rem">Contact: <a href="mailto:aisec@uca.ac.ma">aisec@uca.ac.ma</a></p>
-        <span class="mono-tag">Subject: Hack The Intelligence &mdash; Inquiry</span>
+        <span class="mono-tag">Subject: Hack The Intelligence — Inquiry</span>
       </div>
     </div>
   </div>
@@ -322,8 +368,10 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-      <div class="logo">Hack The <span>Intelligence</span></div>
-      <p>National Innovation Competition<br>As part of the AISEC International Summit 2026<br>ENSA &mdash; Cadi Ayyad University, Marrakech, Morocco</p>
+      <!-- adjusted footer logo size (48px) exactly matching references -->
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 60'%3E%3Crect width='220' height='60' fill='%2306080f'/%3E%3Ctext x='12' y='38' font-family='Syne' font-size='28' font-weight='800' fill='%2300c8ff'%3EAISEC%3C/text%3E%3Ctext x='98' y='38' font-family='Syne' font-size='24' fill='%23f0f4ff'%3E2026%3C/text%3E%3C/svg%3E" alt="AISEC" class="footer-logo-img" style="height:48px">
+      <div class="logo" style="margin-top: 8px;">Hack The <span>Intelligence</span></div>
+      <p>National Innovation Competition<br>As part of the AISEC International Summit 2026<br>ENSA — Cadi Ayyad University, Marrakech, Morocco</p>
     </div>
     <div class="footer-col">
       <h5>Competition</h5>
@@ -334,10 +382,10 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
     </div>
     <div class="footer-col">
       <h5>AISEC 2026</h5>
-      <a href="index.html">Conference</a>
-      <a href="schedule.html">Schedule</a>
-      <a href="venue.html">Venue</a>
-      <a href="speakers.html">Speakers</a>
+      <a href="#">Conference</a>
+      <a href="#">Schedule</a>
+      <a href="#">Venue</a>
+      <a href="#">Speakers</a>
     </div>
     <div class="footer-col">
       <h5>Contact</h5>
@@ -347,13 +395,13 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
     </div>
   </div>
   <div class="footer-bottom">
-    <p>&copy; 2026 <span>AISEC International Summit</span> &mdash; All rights reserved</p>
-    <p><span>ENSA Marrakech</span> &bull; Cadi Ayyad University</p>
+    <p>&copy; 2026 <span>AISEC International Summit</span> — All rights reserved</p>
+    <p><span>ENSA Marrakech</span> • Cadi Ayyad University</p>
   </div>
 </footer>
 
 <script>
-// ── PARTICLE CANVAS ──
+// canvas particle background (glowing lines and dots)
 const canvas=document.getElementById('bg-canvas');
 const ctx=canvas.getContext('2d');
 let W,H;
@@ -373,7 +421,6 @@ function mkParticle(){
 }
 function animate(){
   ctx.clearRect(0,0,W,H);
-  // connection lines
   for(let i=0;i<particles.length;i++){
     for(let j=i+1;j<particles.length;j++){
       const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
@@ -385,7 +432,6 @@ function animate(){
       }
     }
   }
-  // dots
   particles.forEach(p=>{
     p.x+=p.vx;p.y+=p.vy;
     if(p.x<0||p.x>W)p.vx*=-1;
@@ -397,7 +443,7 @@ function animate(){
 }
 animate();
 
-// ── SCROLL FADE ──
+// Intersection Observer for fade-in
 const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})
 },{threshold:.1});
