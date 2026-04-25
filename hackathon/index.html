@@ -186,10 +186,241 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
   .hero-logo-img{height: 55px;}
   .logo-img-main{height: 48px;}
 }
+
+
+
+
+/* ═══════════════════════════════════════════
+   SHIELD PRELOADER — BLUE TEAM
+═══════════════════════════════════════════ */
+#bt-preloader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #020d1a;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Matrix rain canvas sits behind everything */
+#bt-matrix {
+  position: absolute; inset: 0;
+  z-index: 0; pointer-events: none;
+  opacity: .55;
+}
+
+/* Center content */
+.bt-center {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 2.2rem;
+}
+
+/* ── SVG Shield wrapper ── */
+.bt-shield-wrap {
+  position: relative;
+  width: 160px; height: 160px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Outer pulse rings */
+.bt-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(0,200,255,.25);
+  animation: ringPulse 3s ease-in-out infinite;
+}
+.bt-ring-1 { width: 220px; height: 220px; animation-delay: 0s;    border-color: rgba(0,200,255,.2); }
+.bt-ring-2 { width: 280px; height: 280px; animation-delay: .6s;   border-color: rgba(0,200,255,.12); }
+.bt-ring-3 { width: 340px; height: 340px; animation-delay: 1.2s;  border-color: rgba(0,200,255,.06); }
+@keyframes ringPulse {
+  0%,100% { transform: scale(1);    opacity: 1; }
+  50%     { transform: scale(1.06); opacity: .4; }
+}
+
+/* Shield SVG */
+#bt-shield-svg {
+  width: 140px; height: 140px;
+  filter: drop-shadow(0 0 24px rgba(0,200,255,.7))
+          drop-shadow(0 0 60px rgba(0,200,255,.3));
+  animation: shieldFloat 4s ease-in-out infinite;
+}
+@keyframes shieldFloat {
+  0%,100% { transform: translateY(0px);  }
+  50%     { transform: translateY(-10px);}
+}
+
+/* Shield path fill animation */
+#shield-path {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: drawShield 1.4s ease forwards .2s;
+}
+@keyframes drawShield {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Shield fill glow animation */
+#shield-fill {
+  opacity: 0;
+  animation: fillShield .8s ease forwards 1.2s;
+}
+@keyframes fillShield {
+  to { opacity: 1; }
+}
+
+/* Lock icon inside shield */
+#shield-lock {
+  opacity: 0;
+  animation: lockAppear .5s ease forwards 1.8s;
+}
+@keyframes lockAppear {
+  from { opacity: 0; transform: translateY(6px) scale(.8); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);  }
+}
+
+/* ── Labels ── */
+.bt-label {
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+}
+.bt-label-title {
+  font-size: 1rem; letter-spacing: 6px;
+  text-transform: uppercase; color: #00c8ff;
+  text-shadow: 0 0 20px rgba(0,200,255,.8);
+  opacity: 0;
+  animation: labelUp .6s ease forwards 1.6s;
+}
+.bt-label-sub {
+  margin-top: .45rem;
+  font-size: .58rem; letter-spacing: 3.5px;
+  text-transform: uppercase; color: rgba(0,200,255,.45);
+  opacity: 0;
+  animation: labelUp .6s ease forwards 1.9s;
+}
+@keyframes labelUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Progress bar ── */
+.bt-bar-wrap {
+  width: 260px; position: relative;
+}
+.bt-bar-track {
+  height: 2px; background: rgba(0,200,255,.12);
+  overflow: hidden; position: relative;
+}
+.bt-bar-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #004466, #00c8ff);
+  box-shadow: 0 0 12px rgba(0,200,255,.7);
+  transition: width .4s ease;
+}
+.bt-bar-labels {
+  display: flex; justify-content: space-between; margin-top: .5rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .55rem; letter-spacing: 2.5px;
+  color: rgba(0,200,255,.35); text-transform: uppercase;
+}
+#bt-pct { color: #00c8ff; }
+
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+
+
+<!-- ══ SHIELD PRELOADER ══ -->
+<div id="bt-preloader">
+
+  <!-- Matrix Rain canvas -->
+  <canvas id="bt-matrix"></canvas>
+
+  <!-- Centered content -->
+  <div class="bt-center">
+
+    <!-- Shield + rings -->
+    <div class="bt-shield-wrap">
+      <div class="bt-ring bt-ring-1"></div>
+      <div class="bt-ring bt-ring-2"></div>
+      <div class="bt-ring bt-ring-3"></div>
+
+      <svg id="bt-shield-svg" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
+        <!-- Glow filter -->
+        <defs>
+          <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="3.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stop-color="#004d77"/>
+            <stop offset="100%" stop-color="#00c8ff" stop-opacity=".25"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Shield fill (revealed after draw) -->
+        <path id="shield-fill"
+          d="M50 4 L92 20 L92 52 Q92 82 50 106 Q8 82 8 52 L8 20 Z"
+          fill="url(#shieldGrad)"
+          filter="url(#glow)"
+        />
+
+        <!-- Shield outline drawn -->
+        <path id="shield-path"
+          d="M50 4 L92 20 L92 52 Q92 82 50 106 Q8 82 8 52 L8 20 Z"
+          fill="none"
+          stroke="#00c8ff"
+          stroke-width="2.2"
+          stroke-linejoin="round"
+          filter="url(#glow)"
+        />
+
+        <!-- Inner highlight line -->
+        <path
+          d="M50 12 L84 26 L84 52 Q84 76 50 97"
+          fill="none" stroke="rgba(0,200,255,.18)" stroke-width="1"
+          opacity="0"
+          style="opacity:0;animation:fillShield .8s ease forwards 1.4s"
+        />
+
+        <!-- Lock icon inside shield -->
+        <g id="shield-lock" transform="translate(50,54)">
+          <!-- Lock body -->
+          <rect x="-13" y="-5" width="26" height="20" rx="3"
+            fill="none" stroke="#00c8ff" stroke-width="2"
+            filter="url(#glow)"
+          />
+          <!-- Lock shackle -->
+          <path d="M-8,-5 L-8,-13 Q-8,-20 0,-20 Q8,-20 8,-13 L8,-5"
+            fill="none" stroke="#00c8ff" stroke-width="2"
+            stroke-linecap="round"
+          />
+          <!-- Keyhole dot -->
+          <circle cx="0" cy="5" r="3" fill="#00c8ff" filter="url(#glow)"/>
+          <!-- Keyhole stem -->
+          <rect x="-1.5" y="5" width="3" height="5" rx="1" fill="#00c8ff"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Label -->
+    <div class="bt-label">
+      <div class="bt-label-title">BLUE TEAM</div>
+      <div class="bt-label-sub">Defense Systems // AISEC 2026</div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="bt-bar-wrap">
+      <div class="bt-bar-track">
+        <div class="bt-bar-fill" id="bt-prog"></div>
+      </div>
+      <div class="bt-bar-labels">
+        <span>Initializing</span>
+        <span id="bt-pct">0%</span>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <canvas id="bg-canvas"></canvas>
 
@@ -395,6 +626,95 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
 </footer>
 
 <script>
+
+/* ════════════════════════════════════════════
+   SHIELD PRELOADER — Matrix Rain + Progress
+════════════════════════════════════════════ */
+(function () {
+
+  /* ── Matrix Rain (blue-sky palette) ── */
+  const mc  = document.getElementById('bt-matrix');
+  const mct = mc.getContext('2d');
+  let MW, MH, cols, drops;
+  const SZ    = 14;
+  const CHARS = '01アイウエオカキクサシスセタチツテナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+
+  function matrixInit() {
+    MW = mc.width  = window.innerWidth;
+    MH = mc.height = window.innerHeight;
+    cols  = Math.floor(MW / SZ) + 1;
+    drops = Array.from({ length: cols }, () => -(Math.random() * MH / SZ));
+  }
+
+  function matrixTick() {
+    mct.fillStyle = 'rgba(2,13,26,.06)';
+    mct.fillRect(0, 0, MW, MH);
+    mct.font = SZ + 'px "Share Tech Mono", monospace';
+
+    for (let i = 0; i < cols; i++) {
+      const y = drops[i] * SZ;
+      const r = Math.random();
+
+      if (r > .96) {
+        mct.fillStyle = '#e0f8ff';
+        mct.shadowColor = '#00c8ff'; mct.shadowBlur = 14;
+      } else if (r > .75) {
+        mct.fillStyle = '#00c8ff';
+        mct.shadowColor = '#00c8ff'; mct.shadowBlur = 6;
+      } else if (r > .45) {
+        mct.fillStyle = '#0077aa';
+        mct.shadowBlur = 0;
+      } else {
+        mct.fillStyle = '#003f5c';
+        mct.shadowBlur = 0;
+      }
+
+      const ch = CHARS[Math.floor(Math.random() * CHARS.length)];
+      mct.fillText(ch, i * SZ, y);
+      mct.shadowBlur = 0;
+
+      if (y > MH && Math.random() > .967) drops[i] = 0;
+      drops[i] += Math.random() * .55 + .25;
+    }
+  }
+
+  matrixInit();
+  window.addEventListener('resize', matrixInit);
+  const matrixInterval = setInterval(matrixTick, 45);
+
+  /* ── Progress bar ── */
+  const prog = document.getElementById('bt-prog');
+  const pctEl = document.getElementById('bt-pct');
+  let pctVal = 0;
+  const pctTarget = 100;
+  const DURATION = 2800; // ms total
+  const START = performance.now();
+
+  function updateProgress(now) {
+    const elapsed = now - START;
+    const p = Math.min((elapsed / DURATION) * 100, 100);
+    if (prog)  prog.style.width = p + '%';
+    if (pctEl) pctEl.textContent = Math.round(p) + '%';
+    if (p < 100) requestAnimationFrame(updateProgress);
+  }
+  requestAnimationFrame(updateProgress);
+
+  /* ── Dismiss ── */
+  document.body.style.overflow = 'hidden';
+
+  setTimeout(() => {
+    const pre = document.getElementById('bt-preloader');
+    pre.style.transition = 'opacity .65s ease';
+    pre.style.opacity = '0';
+    setTimeout(() => {
+      pre.style.display = 'none';
+      document.body.style.overflow = '';
+      clearInterval(matrixInterval);
+    }, 650);
+  }, 3000);
+
+})();
+
 // canvas particle background (glowing lines and dots)
 const canvas=document.getElementById('bg-canvas');
 const ctx=canvas.getContext('2d');
