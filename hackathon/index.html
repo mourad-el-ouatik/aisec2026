@@ -515,6 +515,43 @@ footer{position:relative;z-index:1;background:rgba(0,0,0,.4);border-top:1px soli
   </div>
 </section>
 
+<!-- JURY -->
+<section class="section alt" id="jury">
+  <div class="section-inner">
+    <div class="section-tag">Expert Panel</div>
+    <h2 class="section-title">Meet the <span class="hl">Jury</span></h2>
+    <div class="section-divider"></div>
+    <p style="color:var(--gray);max-width:540px;line-height:1.85;font-size:.95rem;margin-bottom:2.5rem">A distinguished panel of industry leaders, academics, and cybersecurity experts will evaluate your innovations at AISEC 2026.</p>
+
+    <div style="position:relative;display:flex;align-items:center;gap:1rem">
+      <button id="juryPrev" onclick="juryShift(-1)" aria-label="Previous" style="width:40px;height:40px;border-radius:4px;border:1px solid var(--border);background:var(--card);color:var(--accent);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s;flex-shrink:0">&#8592;</button>
+
+      <div style="overflow:hidden;flex:1" id="juryViewport">
+        <div id="juryTrack" style="display:grid;grid-template-rows:1fr 1fr;grid-auto-flow:column;grid-auto-columns:calc((100% - 4*1rem)/4.5);gap:1rem;transition:transform .45s cubic-bezier(.4,0,.2,1)">
+
+          <!-- CARD TEMPLATE — repeat for each jury member -->
+          <div class="jury-card" style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color .25s,transform .25s">
+            <div style="position:relative;aspect-ratio:1/1;overflow:hidden;background:#0d1626">
+              <img src="images/speakers/kc-profile.webp" alt="KC Santosh" style="width:100%;height:100%;object-fit:cover;filter:grayscale(20%);transition:filter .3s,transform .3s">
+              <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 55%,rgba(6,8,15,.85));pointer-events:none"></div>
+            </div>
+            <div style="padding:.85rem 1rem 1rem">
+              <div style="font-family:var(--font-head);font-weight:700;font-size:.88rem;margin-bottom:.3rem">KC Santosh</div>
+              <div style="font-family:var(--font-mono);font-size:.62rem;letter-spacing:.06em;color:var(--gray);text-transform:uppercase">Chair — CS Dept. — Univ. of South Dakota</div>
+            </div>
+          </div>
+          <!-- ... more cards ... -->
+
+        </div>
+      </div>
+
+      <button id="juryNext" onclick="juryShift(1)" aria-label="Next" style="width:40px;height:40px;border-radius:4px;border:1px solid var(--border);background:var(--card);color:var(--accent);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s;flex-shrink:0">&#8594;</button>
+    </div>
+
+    <div id="juryDots" style="display:flex;justify-content:center;gap:.5rem;margin-top:1.5rem"></div>
+  </div>
+</section>
+
 <!-- TRACKS -->
 <section class="section alt" id="tracks">
   <div class="section-inner">
