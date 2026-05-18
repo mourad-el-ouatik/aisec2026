@@ -2,7 +2,7 @@ const navbar=document.getElementById('navbar');
 window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>40));
 function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open')}
 function closeMenu(){document.getElementById('mobileMenu').classList.remove('open')}
-function tick(){const d=new Date('2026-05-17T09:00:00').getTime()-Date.now();if(d<=0)return;document.getElementById('days').textContent=String(Math.floor(d/86400000)).padStart(2,'0');document.getElementById('hours').textContent=String(Math.floor(d%86400000/3600000)).padStart(2,'0');document.getElementById('mins').textContent=String(Math.floor(d%3600000/60000)).padStart(2,'0');document.getElementById('secs').textContent=String(Math.floor(d%60000/1000)).padStart(2,'0')}
+function tick(){const d=new Date('2026-05-15T08:00:00').getTime()-Date.now();if(d<=0)return;document.getElementById('days').textContent=String(Math.floor(d/86400000)).padStart(2,'0');document.getElementById('hours').textContent=String(Math.floor(d%86400000/3600000)).padStart(2,'0');document.getElementById('mins').textContent=String(Math.floor(d%3600000/60000)).padStart(2,'0');document.getElementById('secs').textContent=String(Math.floor(d%60000/1000)).padStart(2,'0')}
 tick();setInterval(tick,1000);
 function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.program-content').forEach(c=>c.classList.remove('active'));btn.classList.add('active');document.getElementById(id).classList.add('active')}
 let cur=0;
